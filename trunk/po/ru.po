@@ -1,0 +1,339 @@
+# TinyAVI video conversion tool
+# Copyright (C) 2008 Andrew Zabolotny
+# Andrew Zabolotny <zap@homelink.ru>, 2008
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: TinyAVI\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-03-16 19:52+0300\n"
+"PO-Revision-Date: 2008-03-15 05:14+0300\n"
+"Last-Translator:  <>\n"
+"Language-Team:  <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+
+#: share/gui.glade:7
+msgid "TinyAVI video converter"
+msgstr "Преобразователь видеофайлов TinyAVI"
+
+#: share/gui.glade:58
+msgid "Play selected file with current settings (on-the-fly conversion)"
+msgstr "Проиграть файл, используя текущие настройки (преобразование на лету)"
+
+#: share/gui.glade:59
+msgid "gtk-media-play"
+msgstr ""
+
+#: share/gui.glade:71
+msgid "Convert selected file only"
+msgstr "Преобразовать выделенные файлы"
+
+#: share/gui.glade:72
+msgid "gtk-convert"
+msgstr ""
+
+#: share/gui.glade:87
+msgid "Stop converting selected file only"
+msgstr "Остановить преобразование выделенных файлов"
+
+#: share/gui.glade:88
+msgid "gtk-stop"
+msgstr ""
+
+#: share/gui.glade:103
+msgid "gtk-about"
+msgstr ""
+
+#: share/gui.glade:132
+msgid "Add new video files to the queue"
+msgstr "Добавить новые видеофайлы в очередь"
+
+#: share/gui.glade:133 share/gui.glade:485
+msgid "gtk-add"
+msgstr ""
+
+#: share/gui.glade:148
+msgid "Convert all idle video files"
+msgstr "Преобразовать все файлы"
+
+#: share/gui.glade:149
+msgid "Convert _All"
+msgstr "Преобразовать _Всё"
+
+#: share/gui.glade:165
+msgid "Stop all conversions immediately"
+msgstr "Остановить преобразование всех файлов"
+
+#: share/gui.glade:166
+msgid "Stop A_ll"
+msgstr "Остановить В_сё"
+
+#: share/gui.glade:201
+msgid "Number of CPUs to use:"
+msgstr "Количество процессоров:"
+
+#: share/gui.glade:213
+msgid "Number of simultaneous conversion processes to start"
+msgstr "Количество одновременно запущенных процессов преобразования"
+
+#: share/gui.glade:244
+msgid "Target device screen width"
+msgstr "Ширина экрана целевого устройства"
+
+#: share/gui.glade:260
+msgid "Target device screen height"
+msgstr "Высота экрана целевого устройства"
+
+#: share/gui.glade:302
+msgid ""
+"Note: The final video size may be different due to movie aspect ratio.\n"
+"This setting just defines the screen size of your target device."
+msgstr ""
+"Внимание: Размер конечного файла может быть несколько другим\n"
+"по причине учёта соотношения сторон исходного видеофайла.\n"
+"Эта настройка просто задаёт размер экрана целевого устройства."
+
+#: share/gui.glade:304
+msgid "<b>Target device screen size</b>"
+msgstr "<b>Размер экрана устройства</b>"
+
+#: share/gui.glade:325
+msgid ""
+"Check this if you want a deinterlace filter\n"
+"to be applied on the input video."
+msgstr ""
+"Пометьте, если хотите убрать черезстрочность\n"
+"во входном видео."
+
+#: share/gui.glade:327
+msgid "De_interlace"
+msgstr "Убрать _черезстрочность"
+
+#: share/gui.glade:338
+msgid ""
+"Check this if you want to apply a light denoise filter\n"
+"on the input video."
+msgstr ""
+"Пометьте, если хотите наложить лёгкий шумоподавитель\n"
+"на входное видео."
+
+#: share/gui.glade:340
+msgid "De_noise"
+msgstr "Подавить _шум"
+
+#: share/gui.glade:354
+msgid ""
+"Check this if you don't want audio track\n"
+"to be re-encoded at a lower bitrate."
+msgstr ""
+"Пометьте, если не хотите чтобы звуковая дорожка\n"
+"была перекодирована с более низким качеством."
+
+#: share/gui.glade:356
+msgid "_Audio Passthrough"
+msgstr "Без преобразования _аудио"
+
+#: share/gui.glade:380
+msgid "Output file name:"
+msgstr "Название выходного файла:"
+
+#: share/gui.glade:391
+msgid ""
+"The rule to build output file name.\n"
+"%(dir)s will be replaced with the directory of the original file\n"
+"%(name)s will be replaced with original file name\n"
+"%(ext)s will be replaced with original file extension"
+msgstr ""
+"Правило построения имени выходного файла.\n"
+"%(dir)s будет заменён на каталог исходного файла\n"
+"%(name)s будет заменён на имя исходного файла\n"
+"%(ext)s будет заменён на расширение исходного файла"
+
+#: share/gui.glade:412
+msgid "Settings"
+msgstr "Настройки"
+
+#: share/gui.glade:456
+msgid "Add a new video file to the queue"
+msgstr "Добавить новый видеофайл в очередь"
+
+#: share/gui.glade:496
+msgid "gtk-cancel"
+msgstr ""
+
+#: share/gui.glade:516
+msgid "About TinyAVI"
+msgstr "О программе TinyAVI"
+
+#: share/gui.glade:523
+msgid "Copyright (C) 2008 Andrew Zabolotny"
+msgstr "Авторское право (C) 2008 Андрей Заболотный"
+
+#: share/gui.glade:524
+msgid ""
+"The easy video converter for portable devices\n"
+"Dedicated to my daughter Alice"
+msgstr ""
+"Простой видеоконвертер для переносных устройств\n"
+"Посвящается моей дочке Алисе"
+
+#: share/gui.glade:527
+msgid "Go to homepage"
+msgstr "Посетить домашнюю страницу"
+
+#: tinyavi/autoconvert.py:58
+msgid "Finding video length, crop and size ..."
+msgstr "Определяем длину, кадрирование и размер ..."
+
+#: tinyavi/autoconvert.py:96
+msgid ""
+"\n"
+"UNEXPECTED ERROR: video length too small\n"
+msgstr ""
+"\n"
+"НЕОЖИДАННАЯ ОШИБКА: длина видео слишком мала\n"
+
+#: tinyavi/autoconvert.py:106
+#, python-format
+msgid "Adding video filter: %s\n"
+msgstr "Добавляем видео фильтр: %s\n"
+
+#: tinyavi/autoconvert.py:109
+#, python-format
+msgid "Analysing file %s\n"
+msgstr "Анализируем файл %s\n"
+
+#: tinyavi/autoconvert.py:112
+#, python-format
+msgid "ERROR: file `%s' does not exist or is not readable\n"
+msgstr "ОШИБКА: файл `%s' не существует или недоступен\n"
+
+#: tinyavi/autoconvert.py:216
+msgid "Analysing finished\n"
+msgstr "Анализ завершён\n"
+
+#: tinyavi/gui.py:39
+msgid "FATAL: Could not find data directory"
+msgstr "ОШИБКА: Не могу найти каталог с данными"
+
+#: tinyavi/gui.py:68
+msgid "Stopped"
+msgstr "Остановлено"
+
+#: tinyavi/gui.py:69
+msgid "Queued"
+msgstr "В очереди"
+
+#: tinyavi/gui.py:70
+msgid "Playing"
+msgstr "Проигрывается"
+
+#: tinyavi/gui.py:71
+msgid "Done"
+msgstr "Готово"
+
+#: tinyavi/gui.py:72
+msgid "Error"
+msgstr "Ошибка"
+
+#: tinyavi/gui.py:73
+msgid "Aborted"
+msgstr "Прервано"
+
+#: tinyavi/gui.py:100
+msgid "Video file name"
+msgstr "Название видеофайла"
+
+#: tinyavi/gui.py:106
+msgid "Status"
+msgstr "Состояние"
+
+#: tinyavi/gui.py:116
+msgid "Video files"
+msgstr "Видео файлы"
+
+#: tinyavi/gui.py:121
+msgid "All files"
+msgstr "Все файлы"
+
+#: tinyavi/gui.py:144
+msgid ""
+"TinyAVI GUI started ...\n"
+"Now add some files to the queue and press `Convert All'\n"
+msgstr ""
+"Программа TinyAVI GUI запущена ...\n"
+"Теперь добавьте файлов в очередь и жмите `Преобразовать Всё'\n"
+
+#: tinyavi/gui.py:294
+#, python-format
+msgid ""
+"Invalid output file mask:\n"
+"%s"
+msgstr ""
+"Ошибочная маска выходного файла:\n"
+"%s"
+
+#: tavi:42
+msgid "%prog [options] [file.avi[ ...]]"
+msgstr "%prog [опции] [файл.avi[ ...]]"
+
+#: tavi:45
+msgid "Redirect output to FILE"
+msgstr "Задать имя выходного файла"
+
+#: tavi:47
+msgid "Limit width to NUM"
+msgstr "Ограничить ширину до NUM"
+
+#: tavi:49
+msgid "Limit height to NUM"
+msgstr "Ограничить высоту до NUM"
+
+#: tavi:51
+msgid "Define additional video filters"
+msgstr "Задать дополнительные видеофильтры"
+
+#: tavi:53
+msgid "Apply hqdn3d denoise filter"
+msgstr "Обработать шумоподавителем hqdn3d"
+
+#: tavi:55
+msgid "Apply deinterlace filter"
+msgstr "Убрать черезстрочность видео"
+
+#: tavi:57
+msgid "Encode given audio stream"
+msgstr "Выбрать аудиопоток по номеру"
+
+#: tavi:59
+msgid "Pass-through the audio channel (no encoding)"
+msgstr "Копирование аудио в результат без перекодирования"
+
+#: tavi:61
+msgid "Create a script instead of running mencoder directly"
+msgstr "Создать сценарий вместо запуска на кодирование"
+
+#: tavi:63
+msgid "Play the converted video in real-time instead of converting"
+msgstr "Показать примерный вид конечного видео (без перекодирования)"
+
+#: tavi:69
+msgid "Nothing to do, exiting; use --help for command-line format\n"
+msgstr ""
+"Операция не задана; используйте --help чтобы увидеть формат командной "
+"строки\n"
+
+#: tavi:88
+msgid "Creating encoding script ...\n"
+msgstr "Создаём сценарий преобразования ...\n"
+
+#: tavi:93
+msgid "Starting conversion process ...\n"
+msgstr "Начинаем процесс преобразования ...\n"
+
+#: tavi:96
+msgid "All done\n"
+msgstr "Процесс завершён\n"

@@ -1,0 +1,16 @@
+# TinyAVI video conversion tool
+# Copyright (C) 2008 Andrew Zabolotny
+# <AUTHOR> <AUTHOR E-MAIL>
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: TinyAVI\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: YYYY-MM-DD HH:MM+TZMM\n"
+"PO-Revision-Date: YYYY-MM-DD HH:MM+TZMM\n"
+"Last-Translator:  <>\n"
+"Language-Team:  <LANG@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"

@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=TinyAVI
+GenericName=The easy video converter for portable devices
+GenericName[ru]=Простой видеоконвертер для переносных устройств
+Comment=A program to convert video files to a format suitable for portable devices
+Comment[ru]=Программа для преобразования видеофайлов в формат, пригодный для переносных устройств
+Exec=tavi-gui %U
+TryExec=tavi-gui
+Terminal=false
+Type=Application
+Icon=tavi
+Categories=GTK;AudioVideo;AudioVideoEditing;
+StartupNotify=true
+MimeType=application/x-extension-mp4;application/x-flash-video;application/x-matroska;application/x-quicktime-media-link;application/x-quicktimeplayer;video/dv;video/fli;video/flv;video/mp4;video/mp4v-es;video/mpeg;video/msvideo;video/quicktime;video/vivo;video/vnd.divx;video/vnd.rn-realvideo;video/vnd.vivo;video/x-anim;video/x-avi;video/x-flc;video/x-fli;video/x-flic;video/x-m4v;video/x-matroska;video/x-mpeg;video/x-ms-asf;video/x-msvideo;video/x-ms-wm;video/x-ms-wmv;video/x-ms-wmx;video/x-ms-wvx;video/x-nsv;video/x-ogm+ogg;video/x-theora+ogg;video/mp2p;video/mpv;

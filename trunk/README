@@ -1,0 +1,22 @@
+These are two simple tools for converting video files to a format suitable
+for miscellaneous pocket video players. I tried to find the least common
+denominator for a number of devices I owned, I hope the output format
+will work on your pocket device as well. If it doesn't and you know why,
+you can drop me a note, and perhaps I will include support for your device
+in later versions of TinyAVI.
+
+There are two programs: one is a command-line converter, and second is a
+graphical interface to the command-line converter. I hope the usage of
+the command-line tool is obvious from it's built-in help.
+
+The conversion heavily relies on the mplayer/mencoder programs, so you
+must have them installed if you want to do anything useful with TinyAVI.
+Also, the GUI program requires PyGTK, so install it if you want a graphical
+interface to the tool.
+
+To install the program, just execute (as root):
+
+        make install
+
+author:
+Andrew Zabolotny <zap@homelink.ru>

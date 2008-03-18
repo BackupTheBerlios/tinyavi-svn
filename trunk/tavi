@@ -1,0 +1,96 @@
+#!/usr/bin/env python
+"""TinyAVI - convert video to a format suitable for portable devices
+"""
+
+__author__ = "Andrew Zabolotny"
+__email__ = "zap@homelink.ru"
+__license__ = """
+TinyAVI - convert video to a format suitable for portable devices
+Copyright (C) 2008 Andrew Zabolotny <zap@homelink.ru>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+from tinyavi import autoconvert, VERSION, FNENC
+import locale, gettext, os, sys
+from optparse import OptionParser
+
+def pr(s):
+    # If output is redirected, use system encoding
+    if not sys.stderr.encoding:
+        sys.stderr.write (s.encode (locale.getpreferredencoding ()))
+    else:
+        sys.stderr.write (s.encode (sys.stderr.encoding))
+
+try:
+    _gnutrans = gettext.GNUTranslations (open (gettext.find("tinyavi")))
+    _ = _gnutrans.ugettext
+except:
+    _ = str
+
+usage = _("%prog [options] [file.avi[ ...]]")
+version = "%prog " + VERSION
+parser = OptionParser (usage=usage, version=version)
+parser.add_option ("-o", "--output", help=_("Redirect output to FILE"),
+                   metavar="FILE", dest="OutFile", default = None)
+parser.add_option ("-W", "--width", help = _("Limit width to NUM"),
+                   metavar="NUM", dest = "Width", default = 320)
+parser.add_option ("-H", "--height", help = _("Limit height to NUM"),
+                   metavar="NUM", dest = "Height", default = 240)
+parser.add_option ("-v", "--vf", help = _("Define additional video filters"),
+                   metavar="...", dest = "vf", default = "pp")
+parser.add_option ("-d", "--denoise", help = _("Apply hqdn3d denoise filter"),
+                   action="store_true", dest = "Denoise", default = False)
+parser.add_option ("-D", "--deint", help = _("Apply deinterlace filter"),
+                   action="store_true", dest = "Deint", default = False)
+parser.add_option ("-a", "--aid", help = _("Encode given audio stream"),
+                   metavar="NUM", dest = "AudioID", default = None)
+parser.add_option ("-p", "--ptaudio", help = _("Pass-through the audio channel (no encoding)"),
+                   action="store_true", dest = "PassAudio", default = False)
+parser.add_option ("-s", "--script", help = _("Create a script instead of running mencoder directly"),
+                   metavar="FILE", dest="ScriptFile", default = None)
+parser.add_option ("-P", "--play", help = _("Play the converted video in real-time instead of converting"),
+                   action="store_true", dest = "Play", default = False)
+
+(options, args) = parser.parse_args ()
+
+if len (args) == 0:
+    pr (_("Nothing to do, exiting; use --help for command-line format\n"))
+    sys.exit (-1)
+
+app = autoconvert.AutoConvertAVI (_, pr)
+
+options.Width = float (options.Width)
+options.Height = float (options.Height)
+if options.OutFile:
+    options.OutFile = options.OutFile.decode (FNENC)
+if options.ScriptFile:
+    if os.path.exists (options.ScriptFile):
+        os.remove (options.ScriptFile)
+
+for fn in args:
+    s = app.AnalyseAVI (fn.decode (FNENC), options)
+    if s:
+        s = s.encode (FNENC)
+
+        if options.ScriptFile:
+            pr (_("Creating encoding script ...\n"))
+            sf = open (options.ScriptFile, "a")
+            sf.write (s)
+            sf.close ()
+        else:
+            pr (_("Starting conversion process ...\n"))
+            os.system (s)
+
+pr (_("All done\n"))

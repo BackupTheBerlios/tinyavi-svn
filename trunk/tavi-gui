@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+"""TinyAVI-GUI is a graphical user interface to the TinyAVI tool
+"""
+
+__author__ = "Andrew Zabolotny"
+__email__ = "zap@homelink.ru"
+__license__ = """
+TinyAVI-GUI - a graphical user interface to the TinyAVI tool
+Copyright (C) 2008 Andrew Zabolotny <zap@homelink.ru>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+from tinyavi import gui, VERSION
+import gettext
+
+try:
+    import gtk
+    import gtk.glade
+    import gobject
+except:
+    print "This program requires PyGTK to run"
+    sys.exit (1)
+
+if __name__ == "__main__":
+    gtk.glade.bindtextdomain ("tinyavi")
+    gtk.glade.textdomain ("tinyavi")
+    try:
+        _gnutrans = gettext.GNUTranslations (open (gettext.find("tinyavi")))
+        _ = _gnutrans.ugettext
+    except:
+        _ = str
+
+    app = gui.TinyAviGui (_)
+    gtk.main ()
