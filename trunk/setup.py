@@ -64,6 +64,8 @@ except SystemExit, msg:
 
 # Cleanup
 for d in os.listdir ("build"):
+    if d [0] == ".":
+        continue
     fulld = os.path.join ("build", d)
     if os.path.isdir (fulld):
         RemoveDir (fulld)
