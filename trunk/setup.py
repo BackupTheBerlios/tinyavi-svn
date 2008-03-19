@@ -55,7 +55,7 @@ try:
             data_files = [
                 ('share/tinyavi', ['share/gui.glade', 'share/tavi.svg']),
                 ('share/doc/tinyavi-' + VERSION, ['README', 'CHANGELOG', 'TRANSLATORS']),
-                ('share/applications', ['tavi.desktop']),
+                ('share/applications', ['build/tinyavi.desktop']),
                 ('share/pixmaps', ['share/tavi.svg'])
                 ] + mofiles
             )
@@ -63,4 +63,7 @@ except SystemExit, msg:
     print msg
 
 # Cleanup
-RemoveDir("build")
+for d in os.listdir ("build"):
+    fulld = os.path.join ("build", d)
+    if os.path.isdir (fulld):
+        RemoveDir (fulld)

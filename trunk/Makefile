@@ -29,7 +29,7 @@ dist:
 
 clean:
 	rm -f tinyavi/*.pyc *.log
-	rm -rf build dist tinyavi-$(VERSION)
+	rm -rf dist tinyavi-$(VERSION) build/lib build/mo build/scripts-*
 
 # Update translation files
 update-po: $(wildcard po/*.po)
