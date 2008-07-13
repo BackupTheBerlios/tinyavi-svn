@@ -40,6 +40,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc CHANGELOG COPYING README TRANSLATORS
 %{python_site}/%{name}/*
+%{python_site}/%{name}-%{version}*-info
 %{_bindir}/tavi
 %{_bindir}/tavi-gui
 %{_datadir}/applications/*.desktop

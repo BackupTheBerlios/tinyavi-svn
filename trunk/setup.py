@@ -40,6 +40,8 @@ try:
             author = 'Andrew Zabolotny',
             author_email = 'zap@homelink.ru',
             url = 'http://tinyavi.berlios.de/',
+            license = 'GPL',
+            platforms = ['Unix'],
             classifiers = [
                 'Development Status :: 4 - Beta',
                 'Environment :: X11 Applications',
@@ -57,7 +59,13 @@ try:
                 ('share/doc/tinyavi-' + VERSION, ['README', 'CHANGELOG', 'TRANSLATORS']),
                 ('share/applications', ['build/tinyavi.desktop']),
                 ('share/pixmaps', ['share/tavi.svg'])
-                ] + mofiles
+                ] + mofiles,
+            long_description = """
+TinyAVI is a set of two tools (one command-line, one GUI) which can convert
+video files to a format suitable for (some) portable devices.
+
+The GUI tool is designed to be very easy to use, it supports batch conversion
+of multiple video files at once (on SMP) and integrates nicely with the GNOME."""
             )
 except SystemExit, msg:
     print msg
