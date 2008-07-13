@@ -96,8 +96,8 @@ List = {
     },
 
     "Aero Vision photo frame": {
-        "VideoWidth"    : 480,
-        "VideoHeight"   : 360,
+        "VideoWidth"    : 320,
+        "VideoHeight"   : 240,
         "VideoCodec"    : "xvid",
         "AudioCodec"    : "lame",
         "VideoOptions"  : {

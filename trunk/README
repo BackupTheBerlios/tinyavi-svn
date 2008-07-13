@@ -6,7 +6,9 @@ for mencoder, and I'll add them into the next release.
 
 There are two programs: one is a command-line converter, and second is a
 graphical interface to the command-line converter. I hope the usage of
-the command-line tool is obvious from it's built-in help.
+the command-line tool is obvious from it's built-in help. The graphical
+tool supports batch processing of multiple video files at once (useful
+on SMP systems).
 
 The conversion heavily relies on the mplayer/mencoder programs, so you
 must have them installed if you want to do anything useful with TinyAVI.

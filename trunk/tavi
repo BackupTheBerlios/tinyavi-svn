@@ -41,7 +41,9 @@ except:
 
 default_target = "Cowon D2"
 target_list = ""
-for x in presets.List:
+k = presets.List.keys ()
+k.sort ()
+for x in k:
     if target_list != "":
         target_list = target_list + ", "
     target_list = target_list + '"' + x + '"';

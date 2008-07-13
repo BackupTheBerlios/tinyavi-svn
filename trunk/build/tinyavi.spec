@@ -19,6 +19,9 @@ Requires:       desktop-file-utils
 TinyAVI is a set of two tools (one command-line, one GUI) which can convert
 video files to a format suitable for (some) portable devices.
 
+The GUI tool is designed to be very easy to use, it supports batch conversion
+of multiple video files at once (on SMP) and integrates nicely with the GNOME.
+
 %prep
 %setup -q
 
