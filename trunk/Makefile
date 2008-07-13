@@ -18,12 +18,14 @@ install:
 dist:
 	rm -rf tinyavi-$(VERSION)
 	mkdir tinyavi-$(VERSION) tinyavi-$(VERSION)/po \
-	      tinyavi-$(VERSION)/share  tinyavi-$(VERSION)/tinyavi
+	      tinyavi-$(VERSION)/share tinyavi-$(VERSION)/tinyavi \
+	      tinyavi-$(VERSION)/build
 	cp -a po/*.po* tinyavi-$(VERSION)/po
 	cp -a share/*.glade share/*.svg tinyavi-$(VERSION)/share
 	cp -a tinyavi/*.py tinyavi-$(VERSION)/tinyavi
+	cp -a build/tinyavi.desktop build/tinyavi.spec tinyavi-$(VERSION)/build
 	cp -a COPYING CHANGELOG Makefile README TRANSLATORS VERSION \
-	      setup.py tavi tavi-gui tavi.desktop tinyavi-$(VERSION)
+	      setup.py tavi tavi-gui tinyavi-$(VERSION)
 	tar cvjf tinyavi-$(VERSION).tar.bz2 tinyavi-$(VERSION)
 	rm -rf tinyavi-$(VERSION)
 

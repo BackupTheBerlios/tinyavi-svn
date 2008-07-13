@@ -1,13 +1,13 @@
 %{!?python_site: %define python_site %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(0)")}
 
 Name:           tinyavi
-Version:        0.1.0
+Version:        0.2.0
 Release:        1%{?dist}
 Summary:        An easy video converter for portable devices
 Group:          Applications/Multimedia
 License:        GPLv3+
 URL:            http://tinyavi.berlios.de/
-Source0:        http://tinyavi.berlios.de/tinyavi/tinyavi-%{version}.tar.bz2
+Source0:        http://download.berlios.de/tinyavi/tinyavi-%{version}.tar.bz2
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  python

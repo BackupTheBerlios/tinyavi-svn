@@ -9,15 +9,17 @@ import fcntl
 import time
 import tempfile
 import subprocess
-import pickle
+import ConfigParser
 import re
 import pygtk
 import gtk
 import gtk.glade
 import gobject
-from tinyavi import VERSION,FNENC
+from tinyavi import VERSION,FNENC,presets
 
-# This is the GUI application class itself
+#-----------------------------------------------------------------------------
+#                          The GUI application class
+#-----------------------------------------------------------------------------
 class TinyAviGui:
     def __init__ (self, _gettext):
         global _
@@ -42,21 +44,18 @@ class TinyAviGui:
             os.makedirs (self.configfile, 0700)
         self.configfile = os.path.join (self.configfile, "tinyavi-gui.conf")
 
+        # Load the widgets from the Glade file
         try:
             self.glade = gtk.glade.XML(self.DATADIR + "/gui.glade")
         except RuntimeError, msg:
             raise SystemExit, msg
-        self.MainWindow = self.glade.get_widget ("MainWindow")
-        self.VideoList = self.glade.get_widget ("VideoList")
-        self.SpinCPUs = self.glade.get_widget ("SpinCPUs")
-        self.Log = self.glade.get_widget ("Log")
-        self.SpinVideoWidth = self.glade.get_widget ("SpinVideoWidth")
-        self.SpinVideoHeight = self.glade.get_widget ("SpinVideoHeight")
-        self.EntryOutputFileMask = self.glade.get_widget ("EntryOutputFileMask")
-        self.SpinCPUs = self.glade.get_widget ("SpinCPUs")
-        self.CheckDeinterlace = self.glade.get_widget ("CheckDeinterlace")
-        self.CheckDenoise = self.glade.get_widget ("CheckDenoise")
-        self.CheckAudioPassthrough = self.glade.get_widget ("CheckAudioPassthrough")
+
+        # Cache most used widgets into variables
+        for widget in "MainWindow", "VideoList", "PresetList", "SpinCPUs", "Log", \
+                      "SpinVideoWidth", "SpinVideoHeight", "EntryOutputFileMask", \
+                      "SpinCPUs", "CheckDeinterlace", "CheckDenoise", \
+                      "CheckAudioPassthrough", "EncodeQuality", "ComboVideoSize":
+            setattr (self, widget, self.glade.get_widget (widget))
 
         self.Queue = {}
         self.Logs = {}
@@ -72,6 +71,8 @@ class TinyAviGui:
         self.ProgressRE = re.compile (".*\(\s*([0-9]*)%\).*")
         self.StageRE = re.compile ("-=\s*STAGE\s*([0-9]*)")
 
+        self.EncodeQuality.set_active (1)
+
         self.glade.signal_autoconnect ({
             "on_MainWindow_destroy" : self.on_MainWindow_destroy,
             "on_VideoList_cursor_changed" : self.on_VideoList_cursor_changed,
@@ -82,10 +83,49 @@ class TinyAviGui:
             "on_ButtonConvertAll_clicked" : self.on_ButtonConvertAll_clicked,
             "on_ButtonStopAll_clicked" : self.on_ButtonStopAll_clicked,
             "on_ButtonAbout_clicked" : self.on_ButtonAbout_clicked,
-            "on_ComboVideoSize_changed" : self.on_ComboVideoSize_changed
+            "on_ComboVideoSize_changed" : self.on_ComboVideoSize_changed,
+            "on_SpinVideoSize_changed" : self.on_SpinVideoSize_changed,
+            "on_PresetList_changed" :  self.on_PresetList_changed
         })
 
         # Initialize the list view
+        self.InitListView ()
+
+        # Load the list of presets
+        self.InitPresetList ()
+
+        # Load config file
+        self.cfg = TinyAviConfig (self.configfile)
+        self.cfg.SetupControls (self)
+
+        self.MainWindow.show_all ()
+
+        # Initialize file open dialog filters
+        afd = self.glade.get_widget ("AddFileDialog")
+        afd.add_filter (self.MakeFilter (_("Video files"), "video/*"))
+        afd.add_filter (self.MakeFilter (_("All files"), "*"))
+
+        # Start the worker 'thread'
+        gobject.timeout_add (500, self.TimerTick)
+
+        self.LogWrite ("", _("TinyAVI GUI started ...\nNow add some files to the queue and press `Convert All'\n"))
+
+
+    def ErrorMsg (self, msg):
+        d = gtk.MessageDialog (self.MainWindow, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
+            gtk.BUTTONS_OK, msg)
+        d.run ()
+        d.destroy ()
+
+
+    def MakeFilter (self, name, tpe):
+        filt = gtk.FileFilter ()
+        filt.set_name (name)
+        filt.add_mime_type (tpe)
+        return filt
+
+
+    def InitListView (self):
         self.ListStore = gtk.ListStore (str, str, str, float)
 
         for x in range(1, len (sys.argv)):
@@ -106,65 +146,50 @@ class TinyAviGui:
         column.set_min_width (150)
         self.VideoList.append_column (column)
 
-        # Initialize file open dialog filters
-        afd = self.glade.get_widget ("AddFileDialog")
 
-        filt = gtk.FileFilter ()
-        filt.set_name (_("Video files"))
-        filt.add_mime_type ("video/*")
-        afd.add_filter (filt)
+    def InitPresetList (self):
+        self.PresetListStore = gtk.ListStore (str)
+        cell = gtk.CellRendererText ()
+        self.PresetList.pack_start (cell, True)
+        self.PresetList.add_attribute (cell, 'text', 0)  
 
-        filt = gtk.FileFilter ()
-        filt.set_name (_("All files"))
-        filt.add_pattern ("*")
-        afd.add_filter (filt)
+        k = presets.List.keys ()
+        k.sort ()
+        for x in k:
+            self.PresetListStore.append ([x])
 
-        try:
-            cf = open (self.configfile, "r")
-            cfg = pickle.load (cf)
-            cf.close ()
-            self.SpinVideoWidth.set_value (cfg ["VideoWidth"])
-            self.SpinVideoHeight.set_value (cfg ["VideoHeight"])
-            self.EntryOutputFileMask.set_text (cfg ["OutFileMask"])
-            self.SpinCPUs.set_value (cfg ["NumCPUs"])
-            self.CheckDeinterlace.set_active (cfg ["Deinterlace"])
-            self.CheckDenoise.set_active (cfg ["Denoise"])
-            self.CheckAudioPassthrough.set_active (cfg ["AudioPass"])
-        except:
-            # no config file yet
-            pass
+        self.PresetList.set_model (self.PresetListStore)
+        self.PresetList.set_active (0)
 
-        self.MainWindow.show_all ()
 
-        gobject.timeout_add (500, self.TimerTick)
+    # ------------------------- # Event handlers # ------------------------- #
 
-        self.LogWrite ("", _("TinyAVI GUI started ...\nNow add some files to the queue and press `Convert All'\n"))
 
     def on_MainWindow_destroy (self, win):
         self.on_ButtonStopAll_clicked (win)
+        # Read the values of the controls
+        self.cfg.ReadControls (self)
         # Save config file
-        try:
-            cfg = self.GetConfig ()
-            cf = open (self.configfile, "w")
-            pickle.dump (cfg, cf)
-            cf.close ()
-        except:
-            # Oh well...
-            pass
+        if not self.cfg.Save (self.configfile):
+            self.ErrorMsg (_("Failed to save configuration file:\n%s") % self.configfile)
 
         gtk.main_quit ()
 
+
     def on_ButtonPlay_clicked (self, but):
-        for idx in self.GetSelected ():
+        for idx in self.GetSelectedVideo ():
             self.ListStore [idx][0] = self._Playing
 
+
     def on_ButtonConvert_clicked (self, but):
-        for idx in self.GetSelected ():
+        for idx in self.GetSelectedVideo ():
             self.QueueFile (self.ListStore [idx])
 
+
     def on_ButtonStop_clicked (self, but):
-        for idx in self.GetSelected ():
+        for idx in self.GetSelectedVideo ():
             self.ConvertStop (self.ListStore [idx], self._Aborted)
+
 
     def on_ButtonAdd_clicked (self, but):
         afd = self.glade.get_widget ("AddFileDialog")
@@ -176,26 +201,41 @@ class TinyAviGui:
         afd.unselect_all ()
         afd.hide ()
 
+
     def on_ButtonConvertAll_clicked (self, but):
         for fi in self.ListStore:
             if not fi [2] in self.Queue:
                 self.QueueFile (fi)
+
 
     def on_ButtonStopAll_clicked (self, but):
         for fi in self.ListStore:
             if fi [2] in self.Queue or fi [0] == self._Queued:
                 self.ConvertStop (fi, self._Aborted)
 
+
     def on_ComboVideoSize_changed (self, cb):
-        sz = cb.get_active_text().split ('x')
-        self.SpinVideoWidth.set_value (float (sz [0]))
-        self.SpinVideoHeight.set_value (float (sz [1]))
+        txt = cb.get_active_text()
+        if txt:
+            sz = txt.split ('x')
+            self.SpinVideoWidth.set_value (float (sz [0]))
+            self.SpinVideoHeight.set_value (float (sz [1]))
+
+
+    def on_SpinVideoSize_changed (self, sb):
+        sz = str (long (self.SpinVideoWidth.get_value ())) + "x" + \
+             str (long (self.SpinVideoHeight.get_value ()))
+        self.SelectItem (self.ComboVideoSize, sz)
+        if self.SelectedItem (self.ComboVideoSize) != sz:
+            self.ComboVideoSize.set_active (-1)
+
 
     def on_VideoList_cursor_changed (self, tv):
         c = tv.get_cursor () [0][0]
-        s = self.GetSelected ()
+        s = self.GetSelectedVideo ()
         if c in s:
             self.LogSwitch (self.ListStore [c][2])
+
 
     def on_ButtonAbout_clicked (self, but):
         abd = self.glade.get_widget ("AboutDialog")
@@ -203,29 +243,19 @@ class TinyAviGui:
         abd.run ()
         abd.hide ()
 
-    def FindFile(self, fn):
-        for i in range (0, len (self.ListStore)):
-            if self.ListStore [i][2] == fn:
-                return i
-        return -1
 
-    def AddFile (self, fn):
-        idx = self.FindFile (fn)
-        val = (self._Stopped, os.path.basename(fn), fn, 0.0)
-        if idx >= 0:
-            self.ConvertStop (self.ListStore [idx])
-            self.ListStore [idx] = val
-        else:
-            self.ListStore.append (val)
+    def on_PresetList_changed (self, list):
+        pn = self.SelectedItem (list)
+        if not presets.List.has_key (pn):
+            # should never happen
+            return
+        preset = presets.List [pn]
+        self.SpinVideoWidth.set_value (preset ["VideoWidth"])
+        self.SpinVideoHeight.set_value (preset ["VideoHeight"])
 
-    def QueueFile (self, fi):
-        if fi [3] < 100:
-            fi [0] = self._Queued
-            fi [3] = 0.0
 
-    def GetSelected (self):
-        sel = self.VideoList.get_selection ().get_selected_rows() [1]
-        return [x [0] for x in sel]
+    # -------------------- # Application log handling # -------------------- #
+
 
     def LogWrite (self, log, s):
         if self.Logs.has_key (log):
@@ -239,6 +269,7 @@ class TinyAviGui:
             b.place_cursor (b.get_end_iter ())
             self.Log.scroll_mark_onscreen (b.get_mark ("insert"))
 
+
     def LogSwitch (self, log):
         if not self.Logs.has_key (log):
             self.Logs [log] = ""
@@ -249,28 +280,44 @@ class TinyAviGui:
         b.place_cursor (b.get_end_iter ())
         self.Log.scroll_mark_onscreen (b.get_mark ("insert"))
 
-    # Read config from settings controls
-    def GetConfig (self):
-        cfg = {}
-        cfg ["VideoWidth"] = int (self.SpinVideoWidth.get_value ())
-        cfg ["VideoHeight"] = int (self.SpinVideoHeight.get_value ())
-        cfg ["OutFileMask"] = self.EntryOutputFileMask.get_text ().strip ()
-        cfg ["NumCPUs"] = int (self.SpinCPUs.get_value ())
-        cfg ["Deinterlace"] = self.CheckDeinterlace.get_active ()
-        cfg ["Denoise"] = self.CheckDenoise.get_active ()
-        cfg ["AudioPass"] = self.CheckAudioPassthrough.get_active ()
-        return cfg
+
+    # ---------------- # Timer ticker function & utilites # ---------------- #
+
+
+    def FindFile(self, fn):
+        for i in range (0, len (self.ListStore)):
+            if self.ListStore [i][2] == fn:
+                return i
+        return -1
+
+
+    def AddFile (self, fn):
+        idx = self.FindFile (fn)
+        val = (self._Stopped, os.path.basename(fn), fn, 0.0)
+        if idx >= 0:
+            self.ConvertStop (self.ListStore [idx])
+            self.ListStore [idx] = val
+        else:
+            self.ListStore.append (val)
+
+
+    def QueueFile (self, fi):
+        if fi [3] < 100:
+            fi [0] = self._Queued
+            fi [3] = 0.0
+
 
     # Return the command line used to launch tinyavi
     def BuildCmdline (self, fn):
-        cfg = self.GetConfig ()
+        self.cfg.ReadControls (self)
         cmdl = [ os.path.join (self.BINDIR, "tavi"),
-            "-W" + str (int (cfg ["VideoWidth"])), "-H" + str (int (cfg ["VideoHeight"])) ]
-        if cfg ["Deinterlace"]:
+            "-W" + str (self.cfg.VideoWidth), "-H" + str (self.cfg.VideoHeight),
+            "-t" + self.SelectedItem (self.PresetList) ]
+        if self.cfg.Deinterlace:
             cmdl.append ("-D")
-        if cfg ["Denoise"]:
+        if self.cfg.Denoise:
             cmdl.append ("-d")
-        if cfg ["AudioPass"]:
+        if self.cfg.AudioPass:
             cmdl.append ("-p")
 
         fn = os.path.realpath (fn)
@@ -284,16 +331,14 @@ class TinyAviGui:
             ex = ""
         bn = bn [0]
         try:
-            ofn = cfg ["OutFileMask"] % {"dir": dn, "name": bn, "ext": ex}
+            ofn = self.cfg.OutFileMask % {"dir": dn, "name": bn, "ext": ex}
             cmdl.append ("-o" + ofn.encode (FNENC))
         except:
-            d = gtk.MessageDialog (self.MainWindow, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR,
-                gtk.BUTTONS_OK, _("Invalid output file mask:\n%s") % cfg ["OutFileMask"])
-            d.run ()
-            d.destroy ()
+            ErrorMsg (_("Invalid output file mask:\n%s") % self.cfg.OutFileMask)
             return None
 
         return cmdl
+
 
     # This is the worker function, called at regular intervals
     # It manages the conversion queue
@@ -320,13 +365,6 @@ class TinyAviGui:
 
         return True
 
-    def RemoveDir (self, d):
-        for root, dirs, files in os.walk (d, topdown=False):
-            for name in files:
-                os.remove (os.path.join (root, name))
-            for name in dirs:
-                os.rmdir (os.path.join (root, name))
-        os.rmdir (d)
 
     def PlayStart (self, fi):
         try:
@@ -344,6 +382,7 @@ class TinyAviGui:
             self.ConvertStop (fi, self._Error)
             return False
         return True
+
 
     def ConvertStart (self, fi):
         # Don't convert files which are already converted
@@ -367,6 +406,7 @@ class TinyAviGui:
             return False
         return True
 
+
     def ConvertStop (self, fi, status = None):
         if self.Queue.has_key (fi [2]):
             q = self.Queue [fi [2]]
@@ -389,6 +429,7 @@ class TinyAviGui:
             fi [0] = self._Stopped
         fi [3] = 0.0
         return True
+
 
     def Progress (self, fi):
         q = self.Queue [fi [2]]
@@ -433,3 +474,140 @@ class TinyAviGui:
                         q [3] = int (r.group (1))
 
         return True
+
+
+    # ------------------------ # Utility methods # ------------------------- #
+
+
+    def RemoveDir (self, d):
+        for root, dirs, files in os.walk (d, topdown=False):
+            for name in files:
+                os.remove (os.path.join (root, name))
+            for name in dirs:
+                os.rmdir (os.path.join (root, name))
+        os.rmdir (d)
+
+
+    def SelectItem (self, widget, text):
+        def check (model, path, iter, data):
+            if model.get_value (iter, 0) == data:
+                widget.set_active_iter (iter)
+                return True
+            return False
+
+        widget.get_model ().foreach (check, text)
+
+
+    def SelectedItem (self, widget):
+        iter = widget.get_active_iter ()
+        if not iter:
+            return ""
+        return widget.get_model ().get_value (iter, 0)
+
+
+    def GetSelectedVideo (self):
+        sel = self.VideoList.get_selection ().get_selected_rows() [1]
+        return [x [0] for x in sel]
+
+
+#-----------------------------------------------------------------------------
+#                          The program config storage
+#-----------------------------------------------------------------------------
+class TinyAviConfig:
+    # Attribute name, type, GUI widget, config file section
+    attrs = [['VideoWidth',  'i', 'SpinVideoWidth',        'Encoder'],
+             ['VideoHeight', 'i', 'SpinVideoHeight',       'Encoder'],
+             ['OutFileMask', 's', 'EntryOutputFileMask',   'TinyAVI'],
+             ['NumCPUs',     'i', 'SpinCPUs',              'TinyAVI'],
+             ['Deinterlace', 'b', 'CheckDeinterlace',      'Encoder'],
+             ['Denoise',     'b', 'CheckDenoise',          'Encoder'],
+             ['AudioPass',   'b', 'CheckAudioPassthrough', 'Encoder'],
+             ['Preset',      'l', 'PresetList',            'TinyAVI'],
+             ['Quality',     'l', 'EncodeQuality',         'Encoder']]
+
+
+    # Initialize the config object
+    def __init__ (self, fn):
+        self.vault = ConfigParser.RawConfigParser ()
+        self.Read (fn)
+
+
+    # Read the config from a file
+    def Read (self, fn):
+        self.vault.read (fn)
+        # Copy config file values to local attributes
+        for attr in self.attrs:
+            try:
+                setattr (self, attr [0],
+                    {
+                        's': lambda: self.vault.get (attr [3], attr [0]),
+                        'l': lambda: self.vault.get (attr [3], attr [0]),
+                        'i': lambda: self.vault.getint (attr [3], attr [0]),
+                        'b': lambda: self.vault.getboolean (attr [3], attr [0]),
+                    } [attr [1]] ())
+            except ConfigParser.NoSectionError:
+                # no section in config file
+                pass
+            except ConfigParser.NoOptionError:
+                # no such option in file, will set to default later
+                pass
+            except ValueError:
+                # invalid value type, just ignore it
+                pass
+
+
+    def Save (self, fn):
+        # Copy config values to config file
+        for attr in self.attrs:
+            try:
+                # Create config section, if it does not exist yet
+                if not self.vault.has_section (attr [3]):
+                    self.vault.add_section (attr [3])
+
+                self.vault.set (attr [3], attr [0], getattr (self, attr [0]))
+            except AttributeError:
+                # option value undefined, skip it
+                pass
+
+        # self.vault.write (fn) quietly ignores write errors ...
+        try:
+            f = file (fn, "w")
+            self.vault.write (f)
+            f.close ()
+        except IOError:
+            return False
+
+        return True
+
+
+    # Set up the controls according to the state stored in this object
+    def SetupControls (self, gui):
+        for attr in self.attrs:
+            if attr [2] and hasattr (self, attr [0]):
+                {
+                    's': lambda: getattr (gui, attr [2]).set_text (getattr (self, attr [0])),
+                    'l': lambda: gui.SelectItem (getattr (gui, attr [2]), getattr (self, attr [0])),
+                    'i': lambda: getattr (gui, attr [2]).set_value (getattr (self, attr [0])),
+                    'b': lambda: getattr (gui, attr [2]).set_active (getattr (self, attr [0]))
+                } [attr [1]] ()
+            else:
+                # If we don't have this value, read it from GUI
+                self.ReadControl (gui, attr)
+
+
+    # Read the state of the controls
+    def ReadControls (self, gui):
+        for attr in self.attrs:
+            self.ReadControl (gui, attr)
+
+
+    # Read the state of a single control
+    def ReadControl (self, gui, attr):
+        if attr [2]:
+            setattr (self, attr [0],
+                {
+                    's': lambda: getattr (gui, attr [2]).get_text (),
+                    'l': lambda: gui.SelectedItem (getattr (gui, attr [2])),
+                    'i': lambda: int (getattr (gui, attr [2]).get_value ()),
+                    'b': lambda: bool (getattr (gui, attr [2]).get_active ())
+                } [attr [1]] ())

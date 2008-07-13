@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.1 on Tue Mar 18 03:25:23 2008 -->
+<!--Generated with glade3 3.4.4 on Sun Jul 13 21:42:29 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -181,6 +181,82 @@
               </packing>
             </child>
             <child>
+              <widget class="GtkHBox" id="hbox6">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkFrame" id="frame2">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                    <child>
+                      <widget class="GtkAlignment" id="alignment2">
+                        <property name="visible">True</property>
+                        <property name="left_padding">6</property>
+                        <property name="right_padding">6</property>
+                        <child>
+                          <widget class="GtkComboBox" id="PresetList">
+                            <property name="visible">True</property>
+                            <signal name="changed" handler="on_PresetList_changed"/>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Target device&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkFrame" id="frame3">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                    <child>
+                      <widget class="GtkAlignment" id="alignment3">
+                        <property name="visible">True</property>
+                        <property name="left_padding">6</property>
+                        <property name="right_padding">6</property>
+                        <child>
+                          <widget class="GtkComboBox" id="EncodeQuality">
+                            <property name="visible">True</property>
+                            <property name="items" translatable="yes">Low/Small
+Medium/Medium
+High/Large</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label6">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Quality/Size&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
               <widget class="GtkExpander" id="expander1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -246,6 +322,7 @@
                                     <property name="width_chars">4</property>
                                     <property name="adjustment">320 64 1920 8 16 16</property>
                                     <property name="numeric">True</property>
+                                    <signal name="value_changed" handler="on_SpinVideoSize_changed"/>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
@@ -262,6 +339,7 @@
                                     <property name="width_chars">4</property>
                                     <property name="adjustment">240 64 1080 8 16 16</property>
                                     <property name="numeric">True</property>
+                                    <signal name="value_changed" handler="on_SpinVideoSize_changed"/>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
@@ -280,7 +358,10 @@
 220x176
 320x240
 480x272
+480x360
+512x304
 512x384
+640x384
 640x480
 800x480
 800x600</property>
@@ -420,7 +501,7 @@ to be re-encoded at a lower bitrate.</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </widget>
@@ -462,8 +543,8 @@ to be re-encoded at a lower bitrate.</property>
     <property name="transient_for">MainWindow</property>
     <property name="has_separator">False</property>
     <property name="use_preview_label">False</property>
-    <property name="preview_widget_active">False</property>
     <property name="select_multiple">True</property>
+    <property name="preview_widget_active">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
@@ -481,6 +562,7 @@ to be re-encoded at a lower bitrate.</property>
               <widget class="GtkButton" id="fcButtonAdd">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="can_default">True</property>
                 <property name="receives_default">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="label" translatable="yes">gtk-add</property>

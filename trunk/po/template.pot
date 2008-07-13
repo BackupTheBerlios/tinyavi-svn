@@ -1,8 +1,6 @@
 # TinyAVI video conversion tool
-# Copyright (C) 2008 Andrew Zabolotny
-# <AUTHOR> <AUTHOR E-MAIL>
-# 
-# 
+#
+
 msgid ""
 msgstr ""
 "Project-Id-Version: TinyAVI\n"

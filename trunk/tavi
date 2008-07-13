@@ -22,7 +22,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from tinyavi import autoconvert, VERSION, FNENC
+from tinyavi import autoconvert, presets, VERSION, FNENC
 import locale, gettext, os, sys
 from optparse import OptionParser
 
@@ -39,17 +39,30 @@ try:
 except:
     _ = str
 
+default_target = "Cowon D2"
+target_list = ""
+for x in presets.List:
+    if target_list != "":
+        target_list = target_list + ", "
+    target_list = target_list + '"' + x + '"';
+
 usage = _("%prog [options] [file.avi[ ...]]")
 version = "%prog " + VERSION
 parser = OptionParser (usage=usage, version=version)
 parser.add_option ("-o", "--output", help=_("Redirect output to FILE"),
                    metavar="FILE", dest="OutFile", default = None)
+parser.add_option ("-t", "--target",
+                   help = _("Target media player (default=\"%(def)s\"). Available presets: %(pres)s") %
+                   { "def" : default_target, "pres" : target_list },
+                   metavar="PMP", dest = "Target", default = default_target)
 parser.add_option ("-W", "--width", help = _("Limit width to NUM"),
-                   metavar="NUM", dest = "Width", default = 320)
+                   metavar="NUM", dest = "Width", default = None)
 parser.add_option ("-H", "--height", help = _("Limit height to NUM"),
-                   metavar="NUM", dest = "Height", default = 240)
-parser.add_option ("-v", "--vf", help = _("Define additional video filters"),
+                   metavar="NUM", dest = "Height", default = None)
+parser.add_option ("-V", "--vf", help = _("Define additional video filters"),
                    metavar="...", dest = "vf", default = "pp")
+parser.add_option ("-A", "--af", help = _("Define additional audio filters"),
+                   metavar="...", dest = "af", default = "")
 parser.add_option ("-d", "--denoise", help = _("Apply hqdn3d denoise filter"),
                    action="store_true", dest = "Denoise", default = False)
 parser.add_option ("-D", "--deint", help = _("Apply deinterlace filter"),
@@ -62,6 +75,9 @@ parser.add_option ("-s", "--script", help = _("Create a script instead of runnin
                    metavar="FILE", dest="ScriptFile", default = None)
 parser.add_option ("-P", "--play", help = _("Play the converted video in real-time instead of converting"),
                    action="store_true", dest = "Play", default = False)
+parser.add_option ("-q", "--quality",
+                   help = _("Balance between file size and quality: 0..2 = low..high quality = small..large size"),
+                   metavar="NUM", dest = "Quality", default = 1)
 
 (options, args) = parser.parse_args ()
 
@@ -71,13 +87,16 @@ if len (args) == 0:
 
 app = autoconvert.AutoConvertAVI (_, pr)
 
-options.Width = float (options.Width)
-options.Height = float (options.Height)
+if options.Width:
+    options.Width = float (options.Width)
+if options.Height:
+    options.Height = float (options.Height)
 if options.OutFile:
     options.OutFile = options.OutFile.decode (FNENC)
 if options.ScriptFile:
     if os.path.exists (options.ScriptFile):
         os.remove (options.ScriptFile)
+options.Quality = long (options.Quality)
 
 for fn in args:
     s = app.AnalyseAVI (fn.decode (FNENC), options)
