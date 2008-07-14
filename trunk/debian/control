@@ -1,0 +1,17 @@
+Source: tinyavi
+Section: multiverse/graphics
+Priority: optional
+Maintainer: Andrew Zabolotny <zap@homelink.ru>
+Build-Depends-Indep: debhelper (>= 4.2.28), python-central (>= 0.4.7), cdbs (>= 0.4.49)
+XS-Python-Version: all
+Standards-Version: 3.7.2
+
+Package: tinyavi
+Architecture: all
+Depends: ${python:Depends}, python-gtk2, mplayer (>= 1.0), mencoder (>= 1.0)
+XB-Python-Version: ${python:Versions}
+Description: An easy video converter for portable devices
+ TinyAVI is a set of two tools (one command-line, one GUI) which can convert
+ video files to a format suitable for (some) portable devices.
+ The GUI tool is designed to be very easy to use, it supports batch conversion
+ of multiple video files at once (on SMP) and integrates nicely with the GNOME.

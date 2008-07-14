@@ -38,7 +38,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc CHANGELOG COPYING README TRANSLATORS
+%doc debian/changelog README TRANSLATORS
 %{python_site}/%{name}/*
 %{python_site}/%{name}-%{version}*-info
 %{_bindir}/tavi

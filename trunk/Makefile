@@ -19,24 +19,26 @@ dist:
 	rm -rf tinyavi-$(VERSION)
 	mkdir tinyavi-$(VERSION) tinyavi-$(VERSION)/po \
 	      tinyavi-$(VERSION)/share tinyavi-$(VERSION)/tinyavi \
-	      tinyavi-$(VERSION)/build
+	      tinyavi-$(VERSION)/build tinyavi-$(VERSION)/debian
 	cp -a po/*.po* tinyavi-$(VERSION)/po
 	cp -a share/*.glade share/*.svg tinyavi-$(VERSION)/share
 	cp -a tinyavi/*.py tinyavi-$(VERSION)/tinyavi
 	cp -a build/tinyavi.desktop build/tinyavi.spec tinyavi-$(VERSION)/build
-	cp -a COPYING CHANGELOG Makefile README TRANSLATORS VERSION \
+	cp -a debian/* tinyavi-$(VERSION)/debian
+	cp -a Makefile COPYING README TRANSLATORS VERSION \
 	      setup.py tavi tavi-gui tinyavi-$(VERSION)
 	tar cvjf tinyavi-$(VERSION).tar.bz2 tinyavi-$(VERSION)
 	rm -rf tinyavi-$(VERSION)
 
 clean:
+	python setup.py clean -a
 	rm -f tinyavi/*.pyc *.log
-	rm -rf dist tinyavi-$(VERSION) build/lib build/mo build/scripts-*
+	rm -rf tinyavi-$(VERSION)
 
 # Update translation files
 update-po: $(wildcard po/*.po)
 
 po/%.po: $(wildcard share/*.glade) $(wildcard tinyavi/*.py) tavi tavi-gui
 	@(xgettext --omit-header $(filter %.glade,$^) -o - ; \
-	 xgettext --omit-header -L python $(filter-out %.glade,$^) -o -) | \
+	  xgettext --omit-header -L python $(filter-out %.glade,$^) -o -) | \
 	msgmerge $@ - -o $@

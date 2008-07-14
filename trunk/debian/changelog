@@ -1,0 +1,20 @@
+tinyavi (0.2.0-1) unstable; urgency=low
+
+  * Redone config file via ConfigParser, now using a regular
+    ini-style file format.
+  * Implemented encoding presets.
+  * Added presets for Nokia N8xx, Aero Vision photo frame, Cowon D2,
+    untested presets for Sony PSP and iPOD.
+  * Implemented a Quality parameter (0-2) which allows to balance
+    between file size and video/audio quality.
+  * Packaged for Debian/Ubuntu
+
+ -- Andrew Zabolotny <zap@homelink.ru>  Mon, 14 Jul 2008 07:31:37 +0400
+
+tinyavi (0.1.0-1) unstable; urgency=low
+
+  * First public release
+  * New program: tavi-gui
+  * Revamped heavily the command-line tool
+
+ -- Andrew Zabolotny <zap@homelink.ru>  Tue, 18 Mar 2008 00:00:00 +0400
