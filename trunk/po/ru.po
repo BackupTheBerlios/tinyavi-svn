@@ -1,6 +1,5 @@
 # TinyAVI video conversion tool
 # Russian translation
-
 msgid ""
 msgstr ""
 "Project-Id-Version: TinyAVI\n"
@@ -177,6 +176,7 @@ msgid "Go to homepage"
 msgstr "Посетить домашнюю страницу"
 
 #: tinyavi/autoconvert.py:23
+#, python-format
 msgid "Adding %(desc)s filter: %(filt)s\n"
 msgstr "Добавляем %(desc)s фильтр: %(filt)s\n"
 
@@ -217,17 +217,21 @@ msgstr "Используем профиль целевого устройств�
 msgid "ERROR: unknown target media player `%s'\n"
 msgstr "ОШИБКА: неизвестное целевое устройство `%s'\n"
 
-#: tinyavi/autoconvert.py:223 tinyavi/autoconvert.py:225
+#: tinyavi/autoconvert.py:170
+msgid "ERROR: failed to determine video/crop width and/or height\n"
+msgstr "ОШИБКА: не могу определить размер кадра, либо размер его заполненной части\n"
+
 #: tinyavi/autoconvert.py:227 tinyavi/autoconvert.py:229
-#: tinyavi/autoconvert.py:233
+#: tinyavi/autoconvert.py:231 tinyavi/autoconvert.py:233
+#: tinyavi/autoconvert.py:237
 msgid "video"
 msgstr "видео"
 
-#: tinyavi/autoconvert.py:236
+#: tinyavi/autoconvert.py:240
 msgid "audio"
 msgstr "аудио"
 
-#: tinyavi/autoconvert.py:298
+#: tinyavi/autoconvert.py:304
 msgid "Analysing finished\n"
 msgstr "Анализ завершён\n"
 
@@ -301,60 +305,61 @@ msgstr ""
 "Ошибочная маска выходного файла:\n"
 "%s"
 
-#: tavi:49
+#: tavi:51
 msgid "%prog [options] [file.avi[ ...]]"
 msgstr "%prog [опции] [файл.avi[ ...]]"
 
-#: tavi:52
+#: tavi:54
 msgid "Redirect output to FILE"
 msgstr "Задать имя выходного файла"
 
-#: tavi:55
+#: tavi:57
 #, python-format
 msgid "Target media player (default=\"%(def)s\"). Available presets: %(pres)s"
-msgstr "Целевое устройство (по умолчанию=\"%(def)s\"). Имеющиеся варианты: %(pres)s"
+msgstr ""
+"Целевое устройство (по умолчанию=\"%(def)s\"). Имеющиеся варианты: %(pres)s"
 
-#: tavi:58
+#: tavi:60
 msgid "Limit width to NUM"
 msgstr "Ограничить ширину до NUM"
 
-#: tavi:60
+#: tavi:62
 msgid "Limit height to NUM"
 msgstr "Ограничить высоту до NUM"
 
-#: tavi:62
+#: tavi:64
 msgid "Define additional video filters"
 msgstr "Задать дополнительные видеофильтры"
 
-#: tavi:64
+#: tavi:66
 msgid "Define additional audio filters"
 msgstr "Задать дополнительные аудиофильтры"
 
-#: tavi:66
+#: tavi:68
 msgid "Apply hqdn3d denoise filter"
 msgstr "Обработать шумоподавителем hqdn3d"
 
-#: tavi:68
+#: tavi:70
 msgid "Apply deinterlace filter"
 msgstr "Убрать черезстрочность видео"
 
-#: tavi:70
+#: tavi:72
 msgid "Encode given audio stream"
 msgstr "Выбрать аудиопоток по номеру"
 
-#: tavi:72
+#: tavi:74
 msgid "Pass-through the audio channel (no encoding)"
 msgstr "Копирование аудио в результат без перекодирования"
 
-#: tavi:74
+#: tavi:76
 msgid "Create a script instead of running mencoder directly"
 msgstr "Создать сценарий вместо запуска на кодирование"
 
-#: tavi:76
+#: tavi:78
 msgid "Play the converted video in real-time instead of converting"
 msgstr "Показать примерный вид конечного видео (без перекодирования)"
 
-#: tavi:79
+#: tavi:81
 msgid ""
 "Balance between file size and quality: 0..2 = low..high quality = small.."
 "large size"
@@ -362,20 +367,20 @@ msgstr ""
 "Баланс между размером и качеством: 0..2 = низкое..высокое качество = "
 "маленький..большой размер"
 
-#: tavi:85
+#: tavi:87
 msgid "Nothing to do, exiting; use --help for command-line format\n"
 msgstr ""
 "Операция не задана; используйте --help чтобы увидеть формат командной "
 "строки\n"
 
-#: tavi:107
+#: tavi:109
 msgid "Creating encoding script ...\n"
 msgstr "Создаём сценарий преобразования ...\n"
 
-#: tavi:112
+#: tavi:114
 msgid "Starting conversion process ...\n"
 msgstr "Начинаем процесс преобразования ...\n"
 
-#: tavi:115
+#: tavi:117
 msgid "All done\n"
 msgstr "Процесс завершён\n"

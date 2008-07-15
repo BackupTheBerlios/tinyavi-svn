@@ -166,6 +166,10 @@ class AutoConvertAVI:
         if vp == None:
             return None
 
+        if (vp.cw == 0) or (vp.ch == 0) or (vp.vw == 0) or (vp.vh == 0):
+            pr (_("ERROR: failed to determine video/crop width and/or height\n"))
+            return None
+
         # Compute the aspect ratio of the cropped area
         #srca = vp.aspect * ((float (vp.cw) / vp.ch) / (float (vp.vw) / vp.vh))
         srca = vp.aspect * ((float (vp.cw) * vp.vh) / (vp.ch * vp.vw))
