@@ -79,42 +79,50 @@ class AutoConvertAVI:
         res = VideoParam ()
         pr (_("Finding video length, crop and size ..."))
         sys.stderr.flush ()
-        prevl = ""
-        # -sstep 10 -- with this option cropdetect doesn't work with many AVIs :-(
-        # -speed 100 -endpos 10:0 helps a little here...
-        p = Popen3 ("exec mplayer -identify -benchmark -vo null -nosound -vf cropdetect -speed 100 -endpos 10:0 " + Quote (fn).encode (FNENC) + " 2>/dev/null </dev/null");
-        while True:
-            l = p.fromchild.readline ()
-            if l == "" or (l [0:2] == "V:" and l == prevl):
-                break
-            prevl = l
-            l = re.sub (r"^V:.*\r", "", l.strip ())
-            if re.match (r"^ID_LENGTH=", l):
-                res.length = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
-            elif re.match (r"^ID_VIDEO_ASPECT=", l):
-                res.aspect = float (re.sub (r".*=([.0-9]+)[^.0-9]*", r"\1", l))
-            elif re.match (r"^ID_VIDEO_WIDTH=", l):
-                res.vw = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
-            elif re.match (r"^ID_VIDEO_HEIGHT=", l):
-                res.vh = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
-            elif re.match (r"^ID_VIDEO_FPS=", l):
-                res.fps = float (re.sub (r".*=([.0-9]+)[^.0-9]*", r"\1", l))
-            elif re.match (r"^crop area", l) or re.match (r"^\[CROP\]", l):
-                bb = re.split (r"(X: *|Y: *|\()", l)
-                xx = re.split (r"\.\.", bb [2])
-                yy = re.split (r"\.\.", bb [4])
 
-                xx [0] = int (xx [0])
-                xx [1] = int (xx [1])
-                yy [0] = int (yy [0])
-                yy [1] = int (yy [1])
+        for start in (0, 150, 300, 600):
+            prevl = ""
+            count_equal = 0
+            p = Popen3 ("exec mplayer -nouse-filedir-conf -identify -benchmark -vo null " \
+                        "-nosound -vf cropdetect -frames 500 -ss %(start)d %(fn)s " \
+                        "2>/dev/null </dev/null" \
+                        % { "start" : start, "fn" : Quote (fn).encode (FNENC) })
+            while True:
+                l = p.fromchild.readline ()
+                if l == prevl:
+                    count_equal += 1
+                else:
+                    count_equal = 0
+                if l == "" or (l [0:2] == "V:" and count_equal > 5):
+                    break
+                prevl = l
+                l = re.sub (r"^V:.*\r", "", l.strip ())
+                if re.match (r"^ID_LENGTH=", l):
+                    res.length = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                elif re.match (r"^ID_VIDEO_ASPECT=", l):
+                    res.aspect = float (re.sub (r".*=([.0-9]+)[^.0-9]*", r"\1", l))
+                elif re.match (r"^ID_VIDEO_WIDTH=", l):
+                    res.vw = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                elif re.match (r"^ID_VIDEO_HEIGHT=", l):
+                    res.vh = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                elif re.match (r"^ID_VIDEO_FPS=", l):
+                    res.fps = float (re.sub (r".*=([.0-9]+)[^.0-9]*", r"\1", l))
+                elif re.match (r"^crop area", l) or re.match (r"^\[CROP\]", l):
+                    bb = re.split (r"(X: *|Y: *|\()", l)
+                    xx = re.split (r"\.\.", bb [2])
+                    yy = re.split (r"\.\.", bb [4])
 
-                res.ExtendCrop (xx[0], yy[0], xx[1] - xx[0] + 1, yy[1] - yy[0] + 1)
+                    xx [0] = int (xx [0])
+                    xx [1] = int (xx [1])
+                    yy [0] = int (yy [0])
+                    yy [1] = int (yy [1])
 
-        # Kill and close process
-        os.kill (p.pid, signal.SIGTERM)
-        p.wait ()
-        del p
+                    res.ExtendCrop (xx[0], yy[0], xx[1] - xx[0] + 1, yy[1] - yy[0] + 1)
+
+            # Kill and close process
+            os.kill (p.pid, signal.SIGTERM)
+            p.wait ()
+            del p
 
         if res.length < 1:
             pr (_("\nUNEXPECTED ERROR: video length too small\n"))
@@ -166,7 +174,7 @@ class AutoConvertAVI:
         if vp == None:
             return None
 
-        if (vp.cw == 0) or (vp.ch == 0) or (vp.vw == 0) or (vp.vh == 0):
+        if (vp.vw == 0) or (vp.vh == 0) or (vp.cw > vp.vw) or (vp.ch > vp.vh):
             pr (_("ERROR: failed to determine video/crop width and/or height\n"))
             return None
 
@@ -223,14 +231,20 @@ class AutoConvertAVI:
         vf = options.vf
         af = options.af
 
-        if vp.cx != 0 or vp.cy != 0 or vp.cw != vp.vw or vp.ch != vp.vh:
-            vf = AddFilter (vf, _("video"), "crop=%d:%d:%d:%d" %(vp.cw, vp.ch, vp.cx, vp.cy))
         if options.Deint:
             vf = AddFilter (vf, _("video"), "kerndeint")
+        vf = AddFilter (vf, _("video"), "pp=ha/va/dr")
+        if vp.cx != 0 or vp.cy != 0 or vp.cw != vp.vw or vp.ch != vp.vh:
+            vf = AddFilter (vf, _("video"), "crop=%d:%d:%d:%d" %(vp.cw, vp.ch, vp.cx, vp.cy))
         if options.Denoise:
-            vf = AddFilter (vf, _("video"), "hqdn3d=2:1:2")
+            vf = AddFilter (vf, _("video"), "hqdn3d")
+        if options.Sharpen:
+            vf = AddFilter (vf, _("video"), "unsharp=l:3x3:1")
         if vp.sw != vp.cw or vp.sh != vp.vh:
             vf = AddFilter (vf, _("video"), "scale=%d:%d" % (vp.sw, vp.sh))
+
+        if options.NormVolume:
+            vf = AddFilter (vf, _("audio"), "volnorm=2")
 
         if preset.has_key ("VideoFilter"):
             for x in preset ["VideoFilter"]:
@@ -239,23 +253,14 @@ class AutoConvertAVI:
             for x in preset ["AudioFilter"]:
                 af = AddFilter (af, _("audio"), x)
 
-        vopt = ""
-        aopt = ""
+        vopt = "-vf-clr"
+        aopt = "-af-clr"
         if options.AudioID != None:
             aopt = aopt + " -aid %d" % options.AudioID
 
-        if vc.has_key ("Quality"):
-            vqparm = vc ["Quality"] [options.Quality] (vp.sw, vp.sh, vp.fps)
-        else:
-            vqparm = {}
-        if ac.has_key ("Quality"):
-            aqparm = ac ["Quality"] [options.Quality] ()
-        else:
-            aqparm = {}
-
         if options.Play:
             # For playing we need just audio & video filters
-            opts = ""
+            opts = vopt + " " + aopt
             if vf != "":
                 opts += " -vf " + vf
             if af != "":
@@ -269,8 +274,10 @@ mplayer %(opts)s -noaspect %(input)s 2>&1
             vparm = {}
             aparm = {}
 
-            vparm.update (vqparm)
-            aparm.update (aqparm)
+            if vc.has_key ("Quality"):
+                vparm.update (vc ["Quality"] [options.Quality] (vp.sw, vp.sh, vp.fps))
+            if ac.has_key ("Quality"):
+                aparm.update (ac ["Quality"] [options.Quality] ())
 
             if preset.has_key ("VideoOptions"):
                 vparm.update (preset ["VideoOptions"])
@@ -286,8 +293,8 @@ mplayer %(opts)s -noaspect %(input)s 2>&1
                 pass1opts += " -af " + af
                 pass2opts += " -af " + af
 
-            pass1opts += aopt + " " + Subst (ac ["Options"] [0], aparm)
-            pass2opts += aopt + " " + Subst (ac ["Options"] [1], aparm)
+            pass1opts += " " + aopt + " " + Subst (ac ["Options"] [0], aparm)
+            pass2opts += " " + aopt + " " + Subst (ac ["Options"] [1], aparm)
 
             aspect = float (vp.sw) / vp.sh
 

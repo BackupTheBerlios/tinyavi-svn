@@ -54,7 +54,8 @@ class TinyAviGui:
         for widget in "MainWindow", "VideoList", "PresetList", "SpinCPUs", "Log", \
                       "SpinVideoWidth", "SpinVideoHeight", "EntryOutputFileMask", \
                       "SpinCPUs", "CheckDeinterlace", "CheckDenoise", \
-                      "CheckAudioPassthrough", "EncodeQuality", "ComboVideoSize":
+                      "CheckSharpen", "CheckAudioPassthrough", "CheckAudioNormalize", \
+                      "EncodeQuality", "ComboVideoSize":
             setattr (self, widget, self.glade.get_widget (widget))
 
         self.Queue = {}
@@ -80,6 +81,7 @@ class TinyAviGui:
             "on_ButtonConvert_clicked" : self.on_ButtonConvert_clicked,
             "on_ButtonStop_clicked" : self.on_ButtonStop_clicked,
             "on_ButtonAdd_clicked" : self.on_ButtonAdd_clicked,
+            "on_ButtonRemove_clicked" : self.on_ButtonRemove_clicked,
             "on_ButtonConvertAll_clicked" : self.on_ButtonConvertAll_clicked,
             "on_ButtonStopAll_clicked" : self.on_ButtonStopAll_clicked,
             "on_ButtonAbout_clicked" : self.on_ButtonAbout_clicked,
@@ -202,6 +204,22 @@ class TinyAviGui:
         afd.hide ()
 
 
+    def on_ButtonRemove_clicked (self, but):
+        self.on_ButtonStop_clicked (but)
+        r = self.ListStore.get_iter_first ()
+        c = 0
+        for idx in self.GetSelectedVideo ():
+            while c < idx:
+                c += 1
+                r = self.ListStore.iter_next (r)
+
+            fn = self.ListStore.get_value (r, 2)
+            if self.Logs.has_key (fn):
+                del self.Logs [fn]
+
+            self.ListStore.remove (r)
+            c += 1
+
     def on_ButtonConvertAll_clicked (self, but):
         for fi in self.ListStore:
             if not fi [2] in self.Queue:
@@ -311,7 +329,7 @@ class TinyAviGui:
     def BuildCmdline (self, fn):
         self.cfg.ReadControls (self)
         cmdl = [ os.path.join (self.BINDIR, "tavi"),
-            "-W" + str (self.cfg.VideoWidth), "-H" + str (self.cfg.VideoHeight),
+            "-W" + str (self.cfg.Width), "-H" + str (self.cfg.Height),
             "-t" + self.SelectedItem (self.PresetList) ]
         if self.cfg.Deinterlace:
             cmdl.append ("-D")
@@ -515,15 +533,31 @@ class TinyAviGui:
 #-----------------------------------------------------------------------------
 class TinyAviConfig:
     # Attribute name, type, GUI widget, config file section
-    attrs = [['VideoWidth',  'i', 'SpinVideoWidth',        'Encoder'],
-             ['VideoHeight', 'i', 'SpinVideoHeight',       'Encoder'],
-             ['OutFileMask', 's', 'EntryOutputFileMask',   'TinyAVI'],
-             ['NumCPUs',     'i', 'SpinCPUs',              'TinyAVI'],
-             ['Deinterlace', 'b', 'CheckDeinterlace',      'Encoder'],
-             ['Denoise',     'b', 'CheckDenoise',          'Encoder'],
-             ['AudioPass',   'b', 'CheckAudioPassthrough', 'Encoder'],
-             ['Preset',      'l', 'PresetList',            'TinyAVI'],
-             ['Quality',     'l', 'EncodeQuality',         'Encoder']]
+    # Take care of the proper sequence, the controls will be filled
+    # exactly in the sequence they are listed here.
+    attrs = [
+        ['OutFileMask', 's', 'EntryOutputFileMask',   'TinyAVI'],
+        ['NumCPUs',     'i', 'SpinCPUs',              'TinyAVI'],
+        ['Preset',      'l', 'PresetList',            'TinyAVI'],
+        ['Quality',     'l', 'EncodeQuality',         'TinyAVI'],
+        ['Width',       'i', 'SpinVideoWidth',        'Video'  ],
+        ['Height',      'i', 'SpinVideoHeight',       'Video'  ],
+        ['Deinterlace', 'b', 'CheckDeinterlace',      'Video'  ],
+        ['Denoise',     'b', 'CheckDenoise',          'Video'  ],
+        ['Sharpen',     'b', 'CheckSharpen',          'Video'  ],
+        ['AudioPass',   'b', 'CheckAudioPassthrough', 'Audio'  ],
+        ['Normalize',   'b', 'CheckAudioNormalize',   'Audio'  ]
+    ]
+
+
+    upgrade_attrs = [
+        ['VideoWidth',  'Encoder', 'Width',       'Video'],
+        ['VideoHeight', 'Encoder', 'Height',      'Video'],
+        ['Deinterlace', 'Encoder', 'Deinterlace', 'Video'],
+        ['Denoise',     'Encoder', 'Denoise',     'Video'],
+        ['AudioPass',   'Encoder', 'AudioPass',   'Audio'],
+        ['Quality',     'Encoder', 'Quality',     'TinyAVI']
+    ]
 
 
     # Initialize the config object
@@ -535,13 +569,25 @@ class TinyAviConfig:
     # Read the config from a file
     def Read (self, fn):
         self.vault.read (fn)
+
+        # Upgrade old config version, if needed
+        if self.vault.has_section ('Encoder'):
+            for x in self.upgrade_attrs:
+                if not self.vault.has_option (x [3], x [2]) and \
+                   self.vault.has_option (x [1], x [0]):
+                    if not self.vault.has_section (x [3]):
+                        self.vault.add_section (x [3])
+                    self.vault.set (x [3], x [2], self.vault.get (x [1], x [0]))
+
+            self.vault.remove_section ('Encoder')
+
         # Copy config file values to local attributes
         for attr in self.attrs:
             try:
                 setattr (self, attr [0],
                     {
                         's': lambda: self.vault.get (attr [3], attr [0]),
-                        'l': lambda: self.vault.get (attr [3], attr [0]),
+                        'l': lambda: self.vault.getint (attr [3], attr [0]),
                         'i': lambda: self.vault.getint (attr [3], attr [0]),
                         'b': lambda: self.vault.getboolean (attr [3], attr [0]),
                     } [attr [1]] ())
@@ -586,13 +632,15 @@ class TinyAviConfig:
             if attr [2] and hasattr (self, attr [0]):
                 {
                     's': lambda: getattr (gui, attr [2]).set_text (getattr (self, attr [0])),
-                    'l': lambda: gui.SelectItem (getattr (gui, attr [2]), getattr (self, attr [0])),
+                    'l': lambda: getattr (gui, attr [2]).set_active (getattr (self, attr [0])),
                     'i': lambda: getattr (gui, attr [2]).set_value (getattr (self, attr [0])),
                     'b': lambda: getattr (gui, attr [2]).set_active (getattr (self, attr [0]))
                 } [attr [1]] ()
             else:
                 # If we don't have this value, read it from GUI
                 self.ReadControl (gui, attr)
+        # Pretend that the video width/height has changed, to set up the WxY combobox
+        gui.on_SpinVideoSize_changed (None)
 
 
     # Read the state of the controls
@@ -607,7 +655,7 @@ class TinyAviConfig:
             setattr (self, attr [0],
                 {
                     's': lambda: getattr (gui, attr [2]).get_text (),
-                    'l': lambda: gui.SelectedItem (getattr (gui, attr [2])),
+                    'l': lambda: getattr (gui, attr [2]).get_active (),
                     'i': lambda: int (getattr (gui, attr [2]).get_value ()),
                     'b': lambda: bool (getattr (gui, attr [2]).get_active ())
                 } [attr [1]] ())

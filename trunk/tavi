@@ -62,17 +62,21 @@ parser.add_option ("-W", "--width", help = _("Limit width to NUM"),
 parser.add_option ("-H", "--height", help = _("Limit height to NUM"),
                    metavar="NUM", dest = "Height", default = None)
 parser.add_option ("-V", "--vf", help = _("Define additional video filters"),
-                   metavar="...", dest = "vf", default = "pp")
+                   metavar="...", dest = "vf", default = "")
 parser.add_option ("-A", "--af", help = _("Define additional audio filters"),
                    metavar="...", dest = "af", default = "")
 parser.add_option ("-d", "--denoise", help = _("Apply hqdn3d denoise filter"),
                    action="store_true", dest = "Denoise", default = False)
 parser.add_option ("-D", "--deint", help = _("Apply deinterlace filter"),
                    action="store_true", dest = "Deint", default = False)
+parser.add_option ("-S", "--sharpen", help = _("Sharpen the video"),
+                   action="store_true", dest = "Sharpen", default = False)
 parser.add_option ("-a", "--aid", help = _("Encode given audio stream"),
                    metavar="NUM", dest = "AudioID", default = None)
 parser.add_option ("-p", "--ptaudio", help = _("Pass-through the audio channel (no encoding)"),
                    action="store_true", dest = "PassAudio", default = False)
+parser.add_option ("-n", "--normvol", help = _("Normalize the volume of the audio track"),
+                   action="store_true", dest = "NormVolume", default = False)
 parser.add_option ("-s", "--script", help = _("Create a script instead of running mencoder directly"),
                    metavar="FILE", dest="ScriptFile", default = None)
 parser.add_option ("-P", "--play", help = _("Play the converted video in real-time instead of converting"),
