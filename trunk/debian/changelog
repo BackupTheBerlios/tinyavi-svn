@@ -1,3 +1,22 @@
+tinyavi (0.2.1-1) unstable; urgency=low
+
+  * Use by default -vf-clr and -af-clr to avoid any influence from user
+    config files.
+  * Use -frames 500 with -ss 0, 150, 300, 600 as suggested, instead of
+    -endpos 10:0. This is both faster and more reliable.
+  * Perform the deinterlacing as the very first filter. Some filters
+    may change the image and kerndeint, if inserted after them, can not
+    detect interlaced video.
+  * Denoise filter by default without parameters.
+  * Added the "sharpen" option, which enables -vf unsharp=l:3x3:1
+  * Added the volume normalization option, on by default
+  * Interface improved to include new options
+  * Added a "Remove" button to remove videos from queue
+  * Use the -nouse-filedir-conf switch for mplayer to avoid .conf files
+    to influence mplayer test run.
+
+ -- Andrew Zabolotny <maemo@ubumaemo.home.lan>  Thu, 17 Jul 2008 02:33:14 +0400
+
 tinyavi (0.2.0-1) unstable; urgency=low
 
   * Redone config file via ConfigParser, now using a regular
