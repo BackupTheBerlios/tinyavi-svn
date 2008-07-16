@@ -15,7 +15,7 @@ tinyavi (0.2.1-1) unstable; urgency=low
   * Use the -nouse-filedir-conf switch for mplayer to avoid .conf files
     to influence mplayer test run.
 
- -- Andrew Zabolotny <maemo@ubumaemo.home.lan>  Thu, 17 Jul 2008 02:33:14 +0400
+ -- Andrew Zabolotny <zap@homelink.ru>  Thu, 17 Jul 2008 02:33:14 +0400
 
 tinyavi (0.2.0-1) unstable; urgency=low
 
