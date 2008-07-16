@@ -244,7 +244,7 @@ class AutoConvertAVI:
             vf = AddFilter (vf, _("video"), "scale=%d:%d" % (vp.sw, vp.sh))
 
         if options.NormVolume:
-            vf = AddFilter (vf, _("audio"), "volnorm=2")
+            af = AddFilter (af, _("audio"), "volnorm=2")
 
         if preset.has_key ("VideoFilter"):
             for x in preset ["VideoFilter"]:

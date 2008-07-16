@@ -337,6 +337,10 @@ class TinyAviGui:
             cmdl.append ("-d")
         if self.cfg.AudioPass:
             cmdl.append ("-p")
+        if self.cfg.Normalize:
+            cmdl.append ("-n")
+        if self.cfg.Sharpen:
+            cmdl.append ("-S")
 
         fn = os.path.realpath (fn)
         cmdl.append (fn.encode (FNENC))
