@@ -20,17 +20,41 @@ msgstr "Преобразователь видеофайлов TinyAVI"
 msgid "Play selected file with current settings (on-the-fly conversion)"
 msgstr "Проиграть файл, используя текущие настройки (преобразование на лету)"
 
+#: share/gui.glade:59
+msgid "gtk-media-play"
+msgstr ""
+
 #: share/gui.glade:71
 msgid "Convert selected file only"
 msgstr "Преобразовать выделенные файлы"
+
+#: share/gui.glade:72
+msgid "gtk-convert"
+msgstr ""
 
 #: share/gui.glade:87
 msgid "Stop converting selected file only"
 msgstr "Остановить преобразование выделенных файлов"
 
+#: share/gui.glade:88
+msgid "gtk-stop"
+msgstr ""
+
+#: share/gui.glade:103
+msgid "gtk-about"
+msgstr ""
+
 #: share/gui.glade:132
 msgid "Add new video files to the queue"
 msgstr "Добавить новые видеофайлы в очередь"
+
+#: share/gui.glade:133 share/gui.glade:696
+msgid "gtk-add"
+msgstr ""
+
+#: share/gui.glade:147
+msgid "gtk-remove"
+msgstr ""
 
 #: share/gui.glade:163
 msgid "Convert all idle video files"
@@ -87,7 +111,7 @@ msgid ""
 "Note: The final video size may be different due to movie aspect ratio.\n"
 "This setting just defines the screen size of your target device."
 msgstr ""
-"Внимание: Размер конечного файла может быть несколько другим\n"
+"Внимание: Размер конечного файла может быть несколько другим "
 "по причине учёта соотношения сторон исходного видеофайла.\n"
 "Эта настройка просто задаёт размер экрана целевого устройства."
 
@@ -97,61 +121,75 @@ msgstr "<b>Размер экрана устройства</b>"
 
 #: share/gui.glade:446
 msgid ""
-"Check this if you want a deinterlace filter\n"
-"to be applied on the input video."
+"Check this if you want a deinterlace filter to be applied on the input video."
 msgstr ""
-"Пометьте, если хотите убрать черезстрочность\n"
+"Пометьте, если хотите убрать черезстрочность "
 "во входном видео."
 
-#: share/gui.glade:448
+#: share/gui.glade:447
 msgid "De_interlace"
 msgstr "Убрать _черезстрочность"
 
-#: share/gui.glade:462 share/gui.glade:479
+#: share/gui.glade:461
 msgid ""
-"Check this if you want to apply a light denoise filter\n"
-"on the input video."
+"Check this if you want to apply a light denoise filter on the input video."
 msgstr ""
-"Пометьте, если хотите наложить лёгкий шумоподавитель\n"
+"Пометьте, если хотите наложить лёгкий шумоподавитель "
 "на входное видео."
 
-#: share/gui.glade:464
+#: share/gui.glade:462
 msgid "De_noise"
 msgstr "Подавить _шум"
 
-#: share/gui.glade:481
+#: share/gui.glade:477
+msgid ""
+"Check this if you want to increase a bit the sharpness of the resulting "
+"video."
+msgstr ""
+"Пометьте, если хотите слегка увеличить резкость "
+"получаемого на выходе видео."
+
+#: share/gui.glade:478
 msgid "_Sharpen"
 msgstr "_Резкость"
 
-#: share/gui.glade:499
+#: share/gui.glade:496
 msgid "<b>Video settings</b>"
 msgstr "<b>Настройки видео</b>"
 
-#: share/gui.glade:530
+#: share/gui.glade:527
 msgid ""
-"Check this if you don't want audio track\n"
-"to be re-encoded at a lower bitrate."
+"Check this if you don't want audio track to be re-encoded at a lower bitrate."
 msgstr ""
-"Пометьте, если не хотите чтобы звуковая дорожка\n"
+"Пометьте, если не хотите чтобы звуковая дорожка "
 "была перекодирована с более низким качеством."
 
-#: share/gui.glade:532
+#: share/gui.glade:528
 msgid "_Passthrough"
 msgstr "_Без преобразования"
 
-#: share/gui.glade:545
+#: share/gui.glade:541
+msgid ""
+"Check this if you want to normalize the volume of the audio track. Usually "
+"this is a good idea, especially if the original uses multi-channel ac3 audio."
+msgstr ""
+"Пометьте, если хотите нормализовать громкость аудиодорожки. Обычно это "
+"хорошая идея для любого видео, в особенности если исходный файл использует "
+"многоканальное ac3 аудио."
+
+#: share/gui.glade:542
 msgid "N_ormalize"
 msgstr "_Нормализовать"
 
-#: share/gui.glade:563
+#: share/gui.glade:560
 msgid "<b>Audio settings</b>"
 msgstr "<b>Настройки звука</b>"
 
-#: share/gui.glade:593
+#: share/gui.glade:590
 msgid "Output file name:"
 msgstr "Название выходного файла:"
 
-#: share/gui.glade:604
+#: share/gui.glade:601
 msgid ""
 "The rule to build output file name.\n"
 "%(dir)s will be replaced with the directory of the original file\n"
@@ -163,23 +201,27 @@ msgstr ""
 "%(name)s будет заменён на имя исходного файла\n"
 "%(ext)s будет заменён на расширение исходного файла"
 
-#: share/gui.glade:625
+#: share/gui.glade:622
 msgid "Settings"
 msgstr "Настройки"
 
-#: share/gui.glade:669
+#: share/gui.glade:666
 msgid "Add a new video file to the queue"
 msgstr "Добавить новый видеофайл в очередь"
 
-#: share/gui.glade:730
+#: share/gui.glade:707
+msgid "gtk-cancel"
+msgstr ""
+
+#: share/gui.glade:727
 msgid "About TinyAVI"
 msgstr "О программе TinyAVI"
 
-#: share/gui.glade:737
+#: share/gui.glade:734
 msgid "Copyright (C) 2008 Andrew Zabolotny"
 msgstr "Авторское право (C) 2008 Андрей Заболотный"
 
-#: share/gui.glade:738
+#: share/gui.glade:735
 msgid ""
 "The easy video converter for portable devices\n"
 "Dedicated to my daughter Alice"
@@ -187,7 +229,7 @@ msgstr ""
 "Простой видеоконвертер для переносных устройств\n"
 "Посвящается моей дочке Алисе"
 
-#: share/gui.glade:741
+#: share/gui.glade:738
 msgid "Go to homepage"
 msgstr "Посетить домашнюю страницу"
 

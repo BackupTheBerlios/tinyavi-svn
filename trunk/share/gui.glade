@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.4 on Thu Jul 17 00:47:15 2008 -->
+<!--Generated with glade3 3.4.4 on Thu Jul 17 03:15:37 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -443,8 +443,7 @@ This setting just defines the screen size of your target device.</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                            <property name="tooltip" translatable="yes">Check this if you want a deinterlace filter
-to be applied on the input video.</property>
+                                            <property name="tooltip" translatable="yes">Check this if you want a deinterlace filter to be applied on the input video.</property>
                                             <property name="label" translatable="yes">De_interlace</property>
                                             <property name="use_underline">True</property>
                                             <property name="response_id">0</property>
@@ -459,8 +458,7 @@ to be applied on the input video.</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                            <property name="tooltip" translatable="yes">Check this if you want to apply a light denoise filter
-on the input video.</property>
+                                            <property name="tooltip" translatable="yes">Check this if you want to apply a light denoise filter on the input video.</property>
                                             <property name="label" translatable="yes">De_noise</property>
                                             <property name="use_underline">True</property>
                                             <property name="response_id">0</property>
@@ -476,8 +474,7 @@ on the input video.</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                            <property name="tooltip" translatable="yes">Check this if you want to apply a light denoise filter
-on the input video.</property>
+                                            <property name="tooltip" translatable="yes">Check this if you want to increase a bit the sharpness of the resulting video.</property>
                                             <property name="label" translatable="yes">_Sharpen</property>
                                             <property name="use_underline">True</property>
                                             <property name="response_id">0</property>
@@ -527,8 +524,7 @@ on the input video.</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                            <property name="tooltip" translatable="yes">Check this if you don't want audio track
-to be re-encoded at a lower bitrate.</property>
+                                            <property name="tooltip" translatable="yes">Check this if you don't want audio track to be re-encoded at a lower bitrate.</property>
                                             <property name="label" translatable="yes">_Passthrough</property>
                                             <property name="use_underline">True</property>
                                             <property name="response_id">0</property>
@@ -542,6 +538,7 @@ to be re-encoded at a lower bitrate.</property>
                                           <widget class="GtkCheckButton" id="CheckAudioNormalize">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
+                                            <property name="tooltip" translatable="yes">Check this if you want to normalize the volume of the audio track. Usually this is a good idea, especially if the original uses multi-channel ac3 audio.</property>
                                             <property name="label" translatable="yes">N_ormalize</property>
                                             <property name="use_underline">True</property>
                                             <property name="response_id">0</property>
@@ -674,8 +671,8 @@ to be re-encoded at a lower bitrate.</property>
     <property name="transient_for">MainWindow</property>
     <property name="has_separator">False</property>
     <property name="use_preview_label">False</property>
-    <property name="select_multiple">True</property>
     <property name="preview_widget_active">False</property>
+    <property name="select_multiple">True</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
