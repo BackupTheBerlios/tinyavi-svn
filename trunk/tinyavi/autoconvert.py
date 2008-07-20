@@ -8,6 +8,7 @@
 import re
 import os
 import sys
+import math
 import gettext
 import signal
 import locale
@@ -151,7 +152,8 @@ class AutoConvertAVI:
         preset = None
         upper_target = options.Target.upper ()
         for x in presets.List:
-            if x.upper ().find (upper_target) >= 0:
+            if (upper_target == presets.List [x]["Alias"]) or \
+               (x.upper ().find (upper_target) >= 0):
                 preset = presets.List [x]
                 pr (_("Using target media player preset `%s'\n") % x)
                 break
@@ -164,11 +166,23 @@ class AutoConvertAVI:
             options.Width = preset ["VideoWidth"]
         if not options.Height:
             options.Height = preset ["VideoHeight"]
+        if not options.MaxWidth:
+            options.MaxWidth = preset ["MaxWidth"]
+        if not options.MaxHeight:
+            options.MaxHeight = preset ["MaxHeight"]
 
-        self.outfile = options.OutFile
-        if self.outfile == None:
-            x = os.path.splitext (fn)
-            self.outfile = x [0] + "-small" + x [1]
+        if options.OutFile == None:
+            options.OutFile = "%(dir)s/%(name)s-tiny.%(ext)s"
+
+        fn = os.path.realpath (fn)
+        dn = os.path.dirname (fn)
+        bn = os.path.splitext (os.path.basename (fn)) [0]
+        ex = preset ["Extension"]
+        try:
+            self.outfile = options.OutFile % {"dir": dn, "name": bn, "ext": ex}
+        except:
+            pr (_("Invalid output file mask:\n%s") % options.OutFile)
+            return None
 
         vp = self.FindVideoLengthCrop (fn)
         if vp == None:
@@ -177,6 +191,14 @@ class AutoConvertAVI:
         if (vp.vw == 0) or (vp.vh == 0) or (vp.cw > vp.vw) or (vp.ch > vp.vh):
             pr (_("ERROR: failed to determine video/crop width and/or height\n"))
             return None
+
+        # Limit max width/height to cropped width/height
+        tmp = int ((vp.cw + 8) / 16) * 16
+        if options.MaxWidth > tmp:
+            options.MaxWidth = tmp
+        tmp = int ((vp.ch + 8) / 16) * 16
+        if options.MaxHeight > tmp:
+            options.MaxHeight = tmp
 
         # Compute the aspect ratio of the cropped area
         #srca = vp.aspect * ((float (vp.cw) / vp.ch) / (float (vp.vw) / vp.vh))
@@ -212,15 +234,28 @@ class AutoConvertAVI:
             # Vertically limited video
             vp.sw = vp.sh * srca
 
+        # See if we have bandwidth reserve, which is the case
+        # if our video does not fully cover the target size.
+        ratio = math.sqrt ((options.Width * options.Height) / (vp.sw * vp.sh))
+        if ratio > 1:
+            ratio_w = options.MaxWidth / vp.sw
+            ratio_h = options.MaxHeight / vp.sh
+            if ratio > ratio_w:
+                ratio = ratio_w
+            if ratio > ratio_h:
+                ratio = ratio_h
+            vp.sw *= ratio
+            vp.sh *= ratio
+
         # Allow only sizes multiple of 16 (macroblock size).
         vp.sw = int ((vp.sw + 8) / 16) * 16
         vp.sh = int ((vp.sh + 8) / 16) * 16
 
         # Last dirty check (should never happen, but who knows)
-        if vp.sw > options.Width:
-            vp.sw = options.Width
-        if vp.sh > options.Height:
-            vp.sh = options.Height
+        if vp.sw > options.MaxWidth:
+            vp.sw = options.MaxWidth
+        if vp.sh > options.MaxHeight:
+            vp.sh = options.MaxHeight
 
         # Prepare the command line parameters
         if options.PassAudio:
@@ -228,9 +263,11 @@ class AutoConvertAVI:
         vc = presets.vc [preset ["VideoCodec"]]
         ac = presets.ac [preset ["AudioCodec"]]
 
-        vf = options.vf
-        af = options.af
+        vf = ""
+        af = ""
 
+        if options.vf:
+            vf = AddFilter (vf, _("video"), options.vf)
         if options.Deint:
             vf = AddFilter (vf, _("video"), "kerndeint")
         vf = AddFilter (vf, _("video"), "pp=ha/va/dr")
@@ -243,6 +280,8 @@ class AutoConvertAVI:
         if vp.sw != vp.cw or vp.sh != vp.vh:
             vf = AddFilter (vf, _("video"), "scale=%d:%d" % (vp.sw, vp.sh))
 
+        if options.af:
+            af = AddFilter (af, _("audio"), options.af)
         if options.NormVolume:
             af = AddFilter (af, _("audio"), "volnorm=2")
 
@@ -254,7 +293,7 @@ class AutoConvertAVI:
                 af = AddFilter (af, _("audio"), x)
 
         vopt = "-vf-clr"
-        aopt = "-af-clr"
+        aopt = ""
         if options.AudioID != None:
             aopt = aopt + " -aid %d" % options.AudioID
 

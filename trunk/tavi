@@ -39,14 +39,14 @@ try:
 except:
     _ = str
 
-default_target = "Cowon D2"
+default_target = "CD2"
 target_list = ""
 k = presets.List.keys ()
 k.sort ()
 for x in k:
     if target_list != "":
         target_list = target_list + ", "
-    target_list = target_list + '"' + x + '"';
+    target_list = target_list + '"' + x + '" (' + presets.List [x]["Alias"] + ')';
 
 usage = _("%prog [options] [file.avi[ ...]]")
 version = "%prog " + VERSION
@@ -54,13 +54,17 @@ parser = OptionParser (usage=usage, version=version)
 parser.add_option ("-o", "--output", help=_("Redirect output to FILE"),
                    metavar="FILE", dest="OutFile", default = None)
 parser.add_option ("-t", "--target",
-                   help = _("Target media player (default=\"%(def)s\"). Available presets: %(pres)s") %
+                   help = _("Target profile (default=\"%(def)s\") (you can use a substring of the preset name, or preset id). Available presets: %(pres)s.") %
                    { "def" : default_target, "pres" : target_list },
                    metavar="PMP", dest = "Target", default = default_target)
-parser.add_option ("-W", "--width", help = _("Limit width to NUM"),
+parser.add_option ("-W", "--width", help = _("Target video width in pixels"),
                    metavar="NUM", dest = "Width", default = None)
-parser.add_option ("-H", "--height", help = _("Limit height to NUM"),
+parser.add_option ("", "--maxwidth", help = _("Physical screen width in pixels"),
+                   metavar="NUM", dest = "MaxWidth", default = None)
+parser.add_option ("-H", "--height", help = _("Target video height in pixels"),
                    metavar="NUM", dest = "Height", default = None)
+parser.add_option ("", "--maxheight", help = _("Physical screen height in pixels"),
+                   metavar="NUM", dest = "MaxHeight", default = None)
 parser.add_option ("-V", "--vf", help = _("Define additional video filters"),
                    metavar="...", dest = "vf", default = "")
 parser.add_option ("-A", "--af", help = _("Define additional audio filters"),
@@ -95,8 +99,12 @@ app = autoconvert.AutoConvertAVI (_, pr)
 
 if options.Width:
     options.Width = float (options.Width)
+if options.MaxWidth:
+    options.MaxWidth = float (options.MaxWidth)
 if options.Height:
     options.Height = float (options.Height)
+if options.MaxHeight:
+    options.MaxHeight = float (options.MaxHeight)
 if options.OutFile:
     options.OutFile = options.OutFile.decode (FNENC)
 if options.ScriptFile:
@@ -116,6 +124,8 @@ for fn in args:
             sf.close ()
         else:
             pr (_("Starting conversion process ...\n"))
-            os.system (s)
+            if os.system (s) != 0:
+                pr (_("ERROR: conversion unsuccessful\n"))
+                sys.exit (-1)
 
 pr (_("All done\n"))

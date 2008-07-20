@@ -1,3 +1,29 @@
+tinyavi (0.2.2-1) unstable; urgency=low
+
+  * Removed -af-clr because there's no such option in mencoder.
+  * Implemented the "Advanced" mode for geeks. All non-advanced stuff
+    is hidden in default mode now, which makes the program very simple
+    and easy to use. To enable, add "Advanced=True" to the "TinyAVI"
+    section in ~/.config/tinyavi-gui.conf
+  * Advanced mode: added two entry fields where you can enter the values
+    for the -V and -A options (additional audio and video filters).
+  * Added the notion of "Max width / height" to the profiles. This is the
+    max physical resolution of the device screen. This is used to make
+    the video a bit larger than suggested width/height if it uses the
+    same number of pixels (e.g. W*H) like the suggested size.
+  * Added the "Extension" field to presets. This sets the default extension
+    (the value of the %(ext)s macro) for the output file.
+  * Redone the Nokia N8x0 presets to more sane values. There are two
+    presets now: for the GStreamer engine and for the MPlayer engine.
+    The later outperforms GStreamer by a factor of ~1.5 speaking of resolution
+    and bitrate.
+  * Added autodetection for number of CPUs.
+  * Added short selectors for every preset, for usage with the -t switch
+    of tavi.
+  * If mencoder returns non-zero exit status, do so in tavi.
+
+ -- Andrew Zabolotny <zap@homelink.ru>  Sun, 20 Jul 2008 19:11:56 +0400
+
 tinyavi (0.2.1-1) unstable; urgency=low
 
   * Use by default -vf-clr and -af-clr to avoid any influence from user

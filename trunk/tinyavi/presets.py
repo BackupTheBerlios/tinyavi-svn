@@ -86,50 +86,78 @@ ac = {
     }
 }
 
-# Note: It is adviced that target width and height must be multiple of 16!
+# Note1: It is adviced that target width and height must be multiple of 16!
+# Note2: Aliase MUST BE UPPERCASE!
 List = {
     "Cowon D2": {
+        "Alias"         : "CD2",
         "VideoWidth"    : 320,
         "VideoHeight"   : 240,
+        "MaxWidth"      : 320,
+        "MaxHeight"     : 240,
         "VideoCodec"    : "xvid",
-        "AudioCodec"    : "lame"
+        "AudioCodec"    : "lame",
+        "Extension"     : "avi"
     },
 
     "Aero Vision photo frame": {
-        "VideoWidth"    : 320,
+        "Alias"         : "AV",
+        "VideoWidth"    : 400,
         "VideoHeight"   : 240,
+        "MaxWidth"      : 800,
+        "MaxHeight"     : 480,
         "VideoCodec"    : "xvid",
         "AudioCodec"    : "lame",
         "VideoOptions"  : {
             "opts1"    : "-xvidencopts max_bframes=0",
             "opts2"    : "-xvidencopts max_bframes=0"
-        }
+        },
+        "Extension"     : "avi"
     },
 
-    "Nokia N8x0 (High Resolution)": {
-        "VideoWidth"    : 640,
-        "VideoHeight"   : 384,
+    "Nokia N8x0 (GStreamer engine)": {
+        "Alias"         : "N8X0",
+        "VideoWidth"    : 400,
+        "VideoHeight"   : 240,
+        "MaxWidth"      : 800,
+        "MaxHeight"     : 480,
         "VideoCodec"    : "xvid",
-        "AudioCodec"    : "lame"
+        "AudioCodec"    : "lame",
+        "VideoOptions"  : {
+            "opts1"    : "-xvidencopts max_bframes=0",
+            "opts2"    : "-xvidencopts max_bframes=0"
+        },
+        "Extension"     : "avi"
     },
 
-    "Nokia N8x0 (Medium Resolution)": {
+    "Nokia N8x0 (MPlayer engine - best)": {
+        "Alias"         : "N8X0MP",
         "VideoWidth"    : 512,
         "VideoHeight"   : 304,
+        "MaxWidth"      : 800,
+        "MaxHeight"     : 480,
         "VideoCodec"    : "xvid",
-        "AudioCodec"    : "lame"
+        "AudioCodec"    : "lame",
+        "Extension"     : "avi"
     },
 
     "iPOD (untested)": {
+        "Alias"         : "IPOD",
         "VideoWidth"    : 320,
         "VideoHeight"   : 240,
+        "MaxWidth"      : 320,
+        "MaxHeight"     : 240,
         "VideoCodec"    : "xvid",
-        "AudioCodec"    : "lavc-aac"
+        "AudioCodec"    : "lavc-aac",
+        "Extension"     : "avi"
     },
 
     "Sony PSP (MPEG4) (untested)": {
+        "Alias"         : "PSP-MP4",
         "VideoWidth"    : 480,
         "VideoHeight"   : 272,
+        "MaxWidth"      : 480,
+        "MaxHeight"     : 272,
         "VideoCodec"    : "lavc-mpeg4",
         "VideoFilter"   : [ "harddup" ],
         "AudioCodec"    : "lavc-aac",
@@ -137,18 +165,23 @@ List = {
         "VideoOptions"  : {
             "opts1"    : "-lavfopts format=psp",
             "opts2"    : "-lavfopts format=psp"
-        }
+        },
+        "Extension"     : "mp4"
     },
 
     "Sony PSP (H264) (untested)": {
+        "Alias"         : "PSP-264",
         "VideoWidth"    : 480,
         "VideoHeight"   : 272,
+        "MaxWidth"      : 480,
+        "MaxHeight"     : 272,
         "VideoCodec"    : "x264",
         "AudioCodec"    : "lavc-aac",
         "AudioFilter"   : [ "lavcresample=48000" ],
         "VideoOptions"  : {
             "opts1"    : "-lavfopts format=psp",
             "opts2"    : "-lavfopts format=psp"
-        }
+        },
+        "Extension"     : "avi"
     }
 }

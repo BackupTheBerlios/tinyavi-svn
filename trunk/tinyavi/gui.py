@@ -55,7 +55,9 @@ class TinyAviGui:
                       "SpinVideoWidth", "SpinVideoHeight", "EntryOutputFileMask", \
                       "SpinCPUs", "CheckDeinterlace", "CheckDenoise", \
                       "CheckSharpen", "CheckAudioPassthrough", "CheckAudioNormalize", \
-                      "EncodeQuality", "ComboVideoSize":
+                      "EncodeQuality", "ComboVideoSize", "AdvancedSettingsVBox",  \
+                      "VideoFiltersEntry", "AudioFiltersEntry", \
+                      "VideoFiltersHBox", "AudioFiltersHBox":
             setattr (self, widget, self.glade.get_widget (widget))
 
         self.Queue = {}
@@ -96,11 +98,19 @@ class TinyAviGui:
         # Load the list of presets
         self.InitPresetList ()
 
+        # Set default number of CPUs
+        self.SpinCPUs.set_value (self.NumCPUs ())
+
         # Load config file
         self.cfg = TinyAviConfig (self.configfile)
         self.cfg.SetupControls (self)
 
         self.MainWindow.show_all ()
+
+        if not self.cfg.Advanced:
+            self.AdvancedSettingsVBox.hide ()
+            self.VideoFiltersHBox.hide ()
+            self.AudioFiltersHBox.hide ()
 
         # Initialize file open dialog filters
         afd = self.glade.get_widget ("AddFileDialog")
@@ -341,23 +351,14 @@ class TinyAviGui:
             cmdl.append ("-n")
         if self.cfg.Sharpen:
             cmdl.append ("-S")
+        if self.cfg.VFilters:
+            cmdl.append ("-V" + self.cfg.VFilters)
+        if self.cfg.AFilters:
+            cmdl.append ("-A" + self.cfg.AFilters)
 
         fn = os.path.realpath (fn)
         cmdl.append (fn.encode (FNENC))
-
-        dn = os.path.dirname (fn)
-        bn = os.path.basename (fn).rsplit ('.', 1)
-        if len (bn) > 1:
-            ex = bn [1]
-        else:
-            ex = ""
-        bn = bn [0]
-        try:
-            ofn = self.cfg.OutFileMask % {"dir": dn, "name": bn, "ext": ex}
-            cmdl.append ("-o" + ofn.encode (FNENC))
-        except:
-            ErrorMsg (_("Invalid output file mask:\n%s") % self.cfg.OutFileMask)
-            return None
+        cmdl.append ("-o" + self.cfg.OutFileMask.encode (FNENC))
 
         return cmdl
 
@@ -498,6 +499,25 @@ class TinyAviGui:
         return True
 
 
+    def NumCPUs (self):
+        """Source: http://www.artima.com/weblogs/viewpost.jsp?thread=230001"""
+        # Linux, Unix and MacOS:
+        if hasattr (os, "sysconf"):
+            if os.sysconf_names.has_key ("SC_NPROCESSORS_ONLN"):
+                # Linux & Unix:
+                ncpus = os.sysconf("SC_NPROCESSORS_ONLN")
+                if isinstance(ncpus, int) and ncpus > 0:
+                    return ncpus
+                else: # OSX:
+                    return int(os.popen2("sysctl -n hw.ncpu")[1].read())
+        # Windows:
+        if os.environ.has_key("NUMBER_OF_PROCESSORS"):
+            ncpus = int(os.environ["NUMBER_OF_PROCESSORS"]);
+            if ncpus > 0:
+                return ncpus
+        return 1 # Default
+
+
     # ------------------------ # Utility methods # ------------------------- #
 
 
@@ -544,13 +564,16 @@ class TinyAviConfig:
         ['NumCPUs',     'i', 'SpinCPUs',              'TinyAVI'],
         ['Preset',      'l', 'PresetList',            'TinyAVI'],
         ['Quality',     'l', 'EncodeQuality',         'TinyAVI'],
+        ['Advanced',    'F', None,                    'TinyAVI'],
         ['Width',       'i', 'SpinVideoWidth',        'Video'  ],
         ['Height',      'i', 'SpinVideoHeight',       'Video'  ],
         ['Deinterlace', 'b', 'CheckDeinterlace',      'Video'  ],
         ['Denoise',     'b', 'CheckDenoise',          'Video'  ],
         ['Sharpen',     'b', 'CheckSharpen',          'Video'  ],
+        ['VFilters',    's', 'VideoFiltersEntry',     'Video'  ],
         ['AudioPass',   'b', 'CheckAudioPassthrough', 'Audio'  ],
-        ['Normalize',   'b', 'CheckAudioNormalize',   'Audio'  ]
+        ['Normalize',   'b', 'CheckAudioNormalize',   'Audio'  ],
+        ['AFilters',    's', 'AudioFiltersEntry',     'Audio'  ]
     ]
 
 
@@ -594,6 +617,7 @@ class TinyAviConfig:
                         'l': lambda: self.vault.getint (attr [3], attr [0]),
                         'i': lambda: self.vault.getint (attr [3], attr [0]),
                         'b': lambda: self.vault.getboolean (attr [3], attr [0]),
+                        'F': lambda: self.vault.getboolean (attr [3], attr [0]),
                     } [attr [1]] ())
             except ConfigParser.NoSectionError:
                 # no section in config file
@@ -633,13 +657,17 @@ class TinyAviConfig:
     # Set up the controls according to the state stored in this object
     def SetupControls (self, gui):
         for attr in self.attrs:
-            if attr [2] and hasattr (self, attr [0]):
-                {
-                    's': lambda: getattr (gui, attr [2]).set_text (getattr (self, attr [0])),
-                    'l': lambda: getattr (gui, attr [2]).set_active (getattr (self, attr [0])),
-                    'i': lambda: getattr (gui, attr [2]).set_value (getattr (self, attr [0])),
-                    'b': lambda: getattr (gui, attr [2]).set_active (getattr (self, attr [0]))
-                } [attr [1]] ()
+            if hasattr (self, attr [0]):
+                if attr [2]:
+                    {
+                        's': lambda: getattr (gui, attr [2]).set_text (getattr (self, attr [0])),
+                        'l': lambda: getattr (gui, attr [2]).set_active (getattr (self, attr [0])),
+                        'i': lambda: getattr (gui, attr [2]).set_value (getattr (self, attr [0])),
+                        'b': lambda: getattr (gui, attr [2]).set_active (getattr (self, attr [0])),
+                    } [attr [1]] ()
+            elif attr [1] == 'F':
+                # Boolean with default value 'False'
+                setattr (self, attr [0], False)
             else:
                 # If we don't have this value, read it from GUI
                 self.ReadControl (gui, attr)
