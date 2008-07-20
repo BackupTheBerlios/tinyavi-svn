@@ -95,26 +95,36 @@ msgstr ""
 msgid "_Sharpen"
 msgstr "_Резкость"
 
-#: share/gui.glade:364 share/gui.glade:462
+#: share/gui.glade:364 share/gui.glade:465
 msgid "Extra filters:"
 msgstr "Доп. фильтры:"
 
-#: share/gui.glade:392
+#: share/gui.glade:375
+msgid ""
+"Extra video filters to prepend to the list.\n"
+"The format is exactly the same as in the\n"
+"-vf option of mencoder."
+msgstr ""
+"Дополнительные фильтры видео, вставляются перед.\n"
+"основным списком. Формат фильтров такой же,\n"
+"как в опции -vf mencoder'а"
+
+#: share/gui.glade:395
 msgid "<b>Video settings</b>"
 msgstr "<b>Настройки видео</b>"
 
-#: share/gui.glade:426
+#: share/gui.glade:429
 msgid ""
 "Check this if you don't want audio track to be re-encoded at a lower bitrate."
 msgstr ""
 "Пометьте, если не хотите чтобы звуковая дорожка была перекодирована с более "
 "низким качеством."
 
-#: share/gui.glade:427
+#: share/gui.glade:430
 msgid "_Passthrough"
 msgstr "_Без преобразования"
 
-#: share/gui.glade:440
+#: share/gui.glade:443
 msgid ""
 "Check this if you want to normalize the volume of the audio track. Usually "
 "this is a good idea, especially if the original uses multi-channel ac3 audio."
@@ -123,31 +133,41 @@ msgstr ""
 "хорошая идея для любого видео, в особенности если исходный файл использует "
 "многоканальное ac3 аудио."
 
-#: share/gui.glade:441
+#: share/gui.glade:444
 msgid "N_ormalize"
 msgstr "_Нормализовать"
 
-#: share/gui.glade:490
+#: share/gui.glade:476
+msgid ""
+"Extra audio filters to prepend to the list.\n"
+"The format is exactly the same as in the\n"
+"-af option of mencoder."
+msgstr ""
+"Дополнительные фильтры аудио, вставляются перед\n"
+"основным списком. Формат фильтров такой же,\n"
+"как в опции -af mencoder'а."
+
+#: share/gui.glade:496
 msgid "<b>Audio settings</b>"
 msgstr "<b>Настройки звука</b>"
 
-#: share/gui.glade:518
+#: share/gui.glade:524
 msgid "Number of CPUs to use:"
 msgstr "Количество процессоров:"
 
-#: share/gui.glade:530
+#: share/gui.glade:536
 msgid "Number of simultaneous conversion processes to start"
 msgstr "Количество одновременно запущенных процессов преобразования"
 
-#: share/gui.glade:565
+#: share/gui.glade:571
 msgid "Target device screen width"
 msgstr "Ширина экрана целевого устройства"
 
-#: share/gui.glade:581
+#: share/gui.glade:587
 msgid "Target device screen height"
 msgstr "Высота экрана целевого устройства"
 
-#: share/gui.glade:626
+#: share/gui.glade:632
 msgid ""
 "Note: The final video size may be different due to movie aspect ratio.\n"
 "This setting just defines the screen size of your target device."
@@ -156,15 +176,15 @@ msgstr ""
 "учёта соотношения сторон исходного видеофайла.\n"
 "Эта настройка просто задаёт размер экрана целевого устройства."
 
-#: share/gui.glade:628
+#: share/gui.glade:634
 msgid "<b>Target device screen size</b>"
 msgstr "<b>Размер экрана устройства</b>"
 
-#: share/gui.glade:658
+#: share/gui.glade:664
 msgid "Output file name:"
 msgstr "Название выходного файла:"
 
-#: share/gui.glade:669
+#: share/gui.glade:675
 msgid ""
 "The rule to build output file name.\n"
 "%(dir)s will be replaced with the directory of the original file\n"
@@ -176,23 +196,23 @@ msgstr ""
 "%(name)s будет заменён на имя исходного файла\n"
 "%(ext)s будет заменён на расширение по умолчанию"
 
-#: share/gui.glade:690
+#: share/gui.glade:696
 msgid "Settings"
 msgstr "Настройки"
 
-#: share/gui.glade:734
+#: share/gui.glade:740
 msgid "Add a new video file to the queue"
 msgstr "Добавить новый видеофайл в очередь"
 
-#: share/gui.glade:795
+#: share/gui.glade:801
 msgid "About TinyAVI"
 msgstr "О программе TinyAVI"
 
-#: share/gui.glade:802
+#: share/gui.glade:808
 msgid "Copyright (C) 2008 Andrew Zabolotny"
 msgstr "Авторское право (C) 2008 Андрей Заболотный"
 
-#: share/gui.glade:803
+#: share/gui.glade:809
 msgid ""
 "The easy video converter for portable devices\n"
 "Dedicated to my daughter Alice"
@@ -200,7 +220,7 @@ msgstr ""
 "Простой видеоконвертер для переносных устройств\n"
 "Посвящается моей дочке Алисе"
 
-#: share/gui.glade:806
+#: share/gui.glade:812
 msgid "Go to homepage"
 msgstr "Посетить домашнюю страницу"
 
@@ -346,6 +366,7 @@ msgid "Redirect output to FILE"
 msgstr "Задать имя выходного файла"
 
 #: tavi:57
+#, python-format
 msgid ""
 "Target profile (default=\"%(def)s\") (you can use a substring of the preset "
 "name, or preset id). Available presets: %(pres)s."
@@ -438,4 +459,3 @@ msgstr "ОШИБКА: преобразование не удалось\n"
 #: tavi:131
 msgid "All done\n"
 msgstr "Процесс завершён\n"
-
