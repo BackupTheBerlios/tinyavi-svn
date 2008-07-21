@@ -269,7 +269,7 @@ class AutoConvertAVI:
         if options.vf:
             vf = AddFilter (vf, _("video"), options.vf)
         if options.Deint:
-            vf = AddFilter (vf, _("video"), "kerndeint")
+            vf = AddFilter (vf, _("video"), "yadif")
         vf = AddFilter (vf, _("video"), "pp=ha/va/dr")
         if vp.cx != 0 or vp.cy != 0 or vp.cw != vp.vw or vp.ch != vp.vh:
             vf = AddFilter (vf, _("video"), "crop=%d:%d:%d:%d" %(vp.cw, vp.ch, vp.cx, vp.cy))

@@ -23,5 +23,22 @@ To install the program, just execute (as root):
 
         make install
 
+
+== Advanced mode ==
+
+Initially the program was meant for non-technical people. But since the first
+release I often get requests to include this or that option in TinyAVI, which
+is useful only in very specific cases.
+
+To accomodate both groups of users, I decided to add an "Advanced" mode to
+the GUI, which will enable additional controls for advanced people, and
+simplify the default (non-Advanced) mode as much as possible, for the profit
+of both groups.
+
+To enable the Advanced mode you have to lauch tavi-gui at least once, then edit
+the config file ~/.config/tinyavi-gui.conf. In the [TinyAVI] section change
+the Advanced option from False to True (or 1 for short). On next launch you
+will see some extra controls in the setup dialog.
+
 author:
 Andrew Zabolotny <zap@homelink.ru>

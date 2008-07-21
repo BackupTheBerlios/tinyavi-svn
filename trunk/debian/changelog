@@ -21,6 +21,7 @@ tinyavi (0.2.2-1) unstable; urgency=low
   * Added short selectors for every preset, for usage with the -t switch
     of tavi.
   * If mencoder returns non-zero exit status, do so in tavi.
+  * Use yadif instead of kerndeint, which is alot better.
 
  -- Andrew Zabolotny <zap@homelink.ru>  Sun, 20 Jul 2008 19:11:56 +0400
 
