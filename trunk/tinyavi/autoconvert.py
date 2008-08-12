@@ -278,10 +278,10 @@ class AutoConvertAVI:
             vf = AddFilter (vf, _("video"), "crop=%d:%d:%d:%d" %(vp.cw, vp.ch, vp.cx, vp.cy))
         if options.Denoise:
             vf = AddFilter (vf, _("video"), "hqdn3d=2:1:4")
-        if options.Sharpen:
-            vf = AddFilter (vf, _("video"), "unsharp=l:3x3:1")
         if vp.sw != vp.cw or vp.sh != vp.vh:
             vf = AddFilter (vf, _("video"), "scale=%d:%d" % (vp.sw, vp.sh))
+        if options.Sharpen:
+            vf = AddFilter (vf, _("video"), "unsharp=l:3x3:1")
 
         if options.af:
             af = AddFilter (af, _("audio"), options.af)
