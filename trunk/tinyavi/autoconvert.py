@@ -184,6 +184,9 @@ class AutoConvertAVI:
             pr (_("Invalid output file mask:\n%s") % options.OutFile)
             return None
 
+        if not options.Play:
+            pr (_("Resulting video file: %s\n" % self.outfile))
+
         vp = self.FindVideoLengthCrop (fn)
         if vp == None:
             return None

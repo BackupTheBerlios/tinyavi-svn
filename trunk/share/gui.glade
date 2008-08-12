@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.4 on Sun Jul 20 20:12:49 2008 -->
+<!--Generated with glade3 3.4.4 on Wed Aug 13 00:52:08 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
     <property name="title" translatable="yes">TinyAVI video converter</property>
     <property name="icon">tavi.svg</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <signal name="destroy" handler="on_MainWindow_destroy"/>
     <child>
       <widget class="GtkVBox" id="vbox1">
@@ -34,11 +33,11 @@
                         <property name="can_focus">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <property name="headers_clickable">True</property>
-                        <property name="reorderable">True</property>
                         <property name="rules_hint">True</property>
                         <property name="fixed_height_mode">True</property>
                         <property name="show_expanders">False</property>
                         <signal name="cursor_changed" handler="on_VideoList_cursor_changed"/>
+                        <signal name="drag_data_received" handler="on_VideoList_drag_data_received"/>
                       </widget>
                     </child>
                   </widget>
@@ -144,6 +143,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">Remove selected video files from the encoding queue</property>
                     <property name="label" translatable="yes">gtk-remove</property>
                     <property name="use_stock">True</property>
                     <property name="response_id">0</property>
@@ -211,6 +211,7 @@
                         <child>
                           <widget class="GtkComboBox" id="PresetList">
                             <property name="visible">True</property>
+                            <property name="tooltip" translatable="yes">Select the device on which you're going to watch the resulting video. The program will automatically choose the most optimal encoding settings for your device.</property>
                             <signal name="changed" handler="on_PresetList_changed"/>
                           </widget>
                         </child>
@@ -241,6 +242,8 @@
                         <child>
                           <widget class="GtkComboBox" id="EncodeQuality">
                             <property name="visible">True</property>
+                            <property name="tooltip" translatable="yes">The balance between resulting video quality and size.
+If you want smaller files, choose low quality and vice versa.</property>
                             <property name="items" translatable="yes">Low/Small
 Medium/Medium
 High/Large</property>
@@ -339,7 +342,8 @@ High/Large</property>
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                                                <property name="tooltip" translatable="yes">Check this if you want to increase a bit the sharpness of the resulting video.</property>
+                                                <property name="tooltip" translatable="yes">Check this if you want to increase a bit the sharpness of the resulting video.
+NOTE: this comes for the cost of approximatively 1.5 longer encoding time.</property>
                                                 <property name="label" translatable="yes">_Sharpen</property>
                                                 <property name="use_underline">True</property>
                                                 <property name="response_id">0</property>
@@ -652,7 +656,7 @@ This setting just defines the screen size of your target device.</property>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkHBox" id="hbox5">
+                      <widget class="GtkHBox" id="EntryOutputHBox">
                         <property name="visible">True</property>
                         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                         <child>
@@ -744,9 +748,9 @@ This setting just defines the screen size of your target device.</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="transient_for">MainWindow</property>
     <property name="has_separator">False</property>
-    <property name="select_multiple">True</property>
-    <property name="preview_widget_active">False</property>
     <property name="use_preview_label">False</property>
+    <property name="preview_widget_active">False</property>
+    <property name="select_multiple">True</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>

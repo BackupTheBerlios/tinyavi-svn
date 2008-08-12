@@ -57,7 +57,7 @@ class TinyAviGui:
                       "SpinCPUs", "CheckDeinterlace", "CheckDenoise", \
                       "CheckSharpen", "CheckAudioPassthrough", "CheckAudioNormalize", \
                       "EncodeQuality", "ComboVideoSize", "AdvancedSettingsVBox",  \
-                      "VideoFiltersEntry", "AudioFiltersEntry", \
+                      "VideoFiltersEntry", "AudioFiltersEntry", "EntryOutputHBox", \
                       "VideoFiltersHBox", "AudioFiltersHBox":
             setattr (self, widget, self.glade.get_widget (widget))
 
@@ -90,7 +90,8 @@ class TinyAviGui:
             "on_ButtonAbout_clicked" : self.on_ButtonAbout_clicked,
             "on_ComboVideoSize_changed" : self.on_ComboVideoSize_changed,
             "on_SpinVideoSize_changed" : self.on_SpinVideoSize_changed,
-            "on_PresetList_changed" :  self.on_PresetList_changed
+            "on_PresetList_changed" : self.on_PresetList_changed,
+            "on_VideoList_drag_data_received" : self.on_VideoList_drag_data_received
         })
 
         # Initialize the list view
@@ -112,6 +113,7 @@ class TinyAviGui:
             self.AdvancedSettingsVBox.hide ()
             self.VideoFiltersHBox.hide ()
             self.AudioFiltersHBox.hide ()
+            self.EntryOutputHBox.hide ()
 
         # Initialize file open dialog filters
         afd = self.glade.get_widget ("AddFileDialog")
@@ -162,6 +164,10 @@ class TinyAviGui:
         column.set_resizable (True)
         column.set_min_width (150)
         self.VideoList.append_column (column)
+
+        self.VideoList.enable_model_drag_dest(
+            [('text/uri-list', 0, 0)],
+             gtk.gdk.ACTION_DEFAULT | gtk.gdk.ACTION_COPY)
 
 
     def InitPresetList (self):
@@ -268,6 +274,11 @@ class TinyAviGui:
         s = self.GetSelectedVideo ()
         if c in s:
             self.LogSwitch (self.ListStore [c][2])
+
+
+    def on_VideoList_drag_data_received (self, treeview, context, x, y, selection, info, etime):
+        for x in selection.data.split ():
+            self.AddFile (self.Uri2Filename (x).decode (FNENC))
 
 
     def on_ButtonAbout_clicked (self, but):
@@ -559,8 +570,8 @@ class TinyAviGui:
 
     def Uri2Filename (self, fn):
         if fn [:6] == 'file:/':
-            fn = urllib.unquote_plus (fn [7:])
-        return fn
+            fn = fn [7:]
+        return urllib.unquote_plus (fn)
 
 
 #-----------------------------------------------------------------------------
