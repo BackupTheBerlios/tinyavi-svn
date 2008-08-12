@@ -336,6 +336,9 @@ class TinyAviGui:
 
 
     def AddFile (self, fn):
+        if not os.path.isfile (fn):
+            return
+
         idx = self.FindFile (fn)
         val = (self._Stopped, os.path.basename(fn), fn, 0.0)
         if idx >= 0:
@@ -568,10 +571,18 @@ class TinyAviGui:
         return [x [0] for x in sel]
 
 
-    def Uri2Filename (self, fn):
-        if fn [:6] == 'file:/':
-            fn = fn [7:]
-        return urllib.unquote_plus (fn)
+    def Uri2Filename (self, uri):
+        path = urllib.url2pathname (uri) # escape special chars
+        path = path.strip('\r\n\x00') # remove \r\n and NULL
+
+        # get the path to file
+        if path.startswith('file:\\\\\\'): # windows
+            path = path[8:] # 8 is len('file:///')
+        elif path.startswith('file://'): # nautilus, rox
+            path = path[7:] # 7 is len('file://')
+        elif path.startswith('file:'): # xffm
+            path = path[5:] # 5 is len('file:')
+        return path
 
 
 #-----------------------------------------------------------------------------
