@@ -174,7 +174,7 @@ class AutoConvertAVI:
         if options.OutFile == None:
             options.OutFile = "%(dir)s/%(name)s-tiny.%(ext)s"
 
-        fn = os.path.realpath (fn)
+        fn = os.path.realpath (fn.encode (FNENC)).decode (FNENC)
         dn = os.path.dirname (fn)
         bn = os.path.splitext (os.path.basename (fn)) [0]
         ex = preset ["Extension"]
@@ -185,7 +185,7 @@ class AutoConvertAVI:
             return None
 
         if not options.Play:
-            pr (_("Resulting video file: %s\n" % self.outfile))
+            pr (_("Resulting video file: %s\n") % self.outfile)
 
         vp = self.FindVideoLengthCrop (fn)
         if vp == None:
