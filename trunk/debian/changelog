@@ -1,3 +1,20 @@
+tinyavi (0.2.3-1) unstable; urgency=low
+
+  * In non-advanced mode the output filename mask is not shown.
+    Instead, the output filename is displayed during the conversion process.
+  * Implemented simple drag'n'drop support. Now you can throw files
+    from your desktop at TinyAVI.
+  * The window can be now minimized.
+  * Implemented support for URIs (e.g. filenames like
+    file:///var/ftp/%C3%C5%F3.avi will work now).
+  * If the config file is broken (or in a very old format), the program
+    won't crash now, but just ignore the broken config.
+  * Now .flv files will be displayed in the file open dialog on GNOME 2.20.
+  * The "All files" filter in the open dialog was not working.
+  * More fixes regarding filename encodings
+
+ -- Andrew Zabolotny <zap@homelink.ru>  Wed, 13 Aug 2008 01:51:12 +0400
+
 tinyavi (0.2.2-1) unstable; urgency=low
 
   * Removed -af-clr because there's no such option in mencoder.
