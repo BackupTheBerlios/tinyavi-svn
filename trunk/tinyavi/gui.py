@@ -15,6 +15,7 @@ import pygtk
 import gtk
 import gtk.glade
 import gobject
+import urllib
 from tinyavi import VERSION,FNENC,presets
 
 #-----------------------------------------------------------------------------
@@ -114,8 +115,8 @@ class TinyAviGui:
 
         # Initialize file open dialog filters
         afd = self.glade.get_widget ("AddFileDialog")
-        afd.add_filter (self.MakeFilter (_("Video files"), "video/*"))
-        afd.add_filter (self.MakeFilter (_("All files"), "*"))
+        afd.add_filter (self.MakeFilter (_("Video files"), "video/*", "application/x-flash-video"))
+        afd.add_filter (self.MakeFilter (_("All files"), "@*"))
 
         # Start the worker 'thread'
         gobject.timeout_add (500, self.TimerTick)
@@ -130,10 +131,14 @@ class TinyAviGui:
         d.destroy ()
 
 
-    def MakeFilter (self, name, tpe):
+    def MakeFilter (self, name, *tpe):
         filt = gtk.FileFilter ()
         filt.set_name (name)
-        filt.add_mime_type (tpe)
+        for x in tpe:
+            if x [0] == "@":
+                filt.add_pattern (x [1:])
+            else:
+                filt.add_mime_type (x)
         return filt
 
 
@@ -141,7 +146,7 @@ class TinyAviGui:
         self.ListStore = gtk.ListStore (str, str, str, float)
 
         for x in range(1, len (sys.argv)):
-            self.AddFile (sys.argv [x].decode (FNENC))
+            self.AddFile (self.Uri2Filename (sys.argv [x]).decode (FNENC))
 
         self.VideoList.set_model (self.ListStore)
         self.VideoList.get_selection ().set_mode (gtk.SELECTION_MULTIPLE)
@@ -552,6 +557,12 @@ class TinyAviGui:
         return [x [0] for x in sel]
 
 
+    def Uri2Filename (self, fn):
+        if fn [:6] == 'file:/':
+            fn = urllib.unquote_plus (fn [7:])
+        return fn
+
+
 #-----------------------------------------------------------------------------
 #                          The program config storage
 #-----------------------------------------------------------------------------
@@ -595,7 +606,11 @@ class TinyAviConfig:
 
     # Read the config from a file
     def Read (self, fn):
-        self.vault.read (fn)
+        try:
+            self.vault.read (fn)
+        except:
+            # hmm, broken config file/very old version
+            pass
 
         # Upgrade old config version, if needed
         if self.vault.has_section ('Encoder'):
