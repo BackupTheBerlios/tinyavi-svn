@@ -325,7 +325,7 @@ class TinyAviGui:
         self.Log.scroll_mark_onscreen (b.get_mark ("insert"))
 
 
-    # ---------------- # Timer ticker function & utilites # ---------------- #
+    # ---------------------- # Timer ticker function # ---------------------- #
 
 
     def FindFile(self, fn):
@@ -390,7 +390,7 @@ class TinyAviGui:
             fi = self.ListStore [i]
             if fi [2] in self.Queue:
                 if self.Progress (fi):
-                    in_queue = in_queue + 1
+                    in_queue += 1
 
         i = 0
         num_cpus = self.SpinCPUs.get_value ()
@@ -399,11 +399,11 @@ class TinyAviGui:
             if not fi [2] in self.Queue:
                 if fi [0] == self._Queued:
                     if self.ConvertStart (fi) and self.Progress (fi):
-                        in_queue = in_queue + 1
+                        in_queue += 1
                 elif fi [0] == self._Playing:
                     if self.PlayStart (fi) and self.Progress (fi):
-                        in_queue = in_queue + 1
-            i = i + 1
+                        in_queue += 1
+            i += 1
 
         return True
 
@@ -416,7 +416,7 @@ class TinyAviGui:
                 return False
 
             cmdl.append ("-P")
-            p = subprocess.Popen(cmdl, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen (cmdl, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             fcntl.fcntl (p.stdout, fcntl.F_SETFL, os.O_NDELAY)
             fcntl.fcntl (p.stderr, fcntl.F_SETFL, os.O_NDELAY)
             self.Queue [fi [2]] = [p, "", None, 1]
@@ -518,25 +518,6 @@ class TinyAviGui:
         return True
 
 
-    def NumCPUs (self):
-        """Source: http://www.artima.com/weblogs/viewpost.jsp?thread=230001"""
-        # Linux, Unix and MacOS:
-        if hasattr (os, "sysconf"):
-            if os.sysconf_names.has_key ("SC_NPROCESSORS_ONLN"):
-                # Linux & Unix:
-                ncpus = os.sysconf("SC_NPROCESSORS_ONLN")
-                if isinstance(ncpus, int) and ncpus > 0:
-                    return ncpus
-                else: # OSX:
-                    return int(os.popen2("sysctl -n hw.ncpu")[1].read())
-        # Windows:
-        if os.environ.has_key("NUMBER_OF_PROCESSORS"):
-            ncpus = int(os.environ["NUMBER_OF_PROCESSORS"]);
-            if ncpus > 0:
-                return ncpus
-        return 1 # Default
-
-
     # ------------------------ # Utility methods # ------------------------- #
 
 
@@ -583,6 +564,25 @@ class TinyAviGui:
         elif path.startswith('file:'): # xffm
             path = path[5:] # 5 is len('file:')
         return path
+
+
+    def NumCPUs (self):
+        """Source: http://www.artima.com/weblogs/viewpost.jsp?thread=230001"""
+        # Linux, Unix and MacOS:
+        if hasattr (os, "sysconf"):
+            if os.sysconf_names.has_key ("SC_NPROCESSORS_ONLN"):
+                # Linux & Unix:
+                ncpus = os.sysconf("SC_NPROCESSORS_ONLN")
+                if isinstance(ncpus, int) and ncpus > 0:
+                    return ncpus
+                else: # OSX:
+                    return int(os.popen2("sysctl -n hw.ncpu")[1].read())
+        # Windows:
+        if os.environ.has_key("NUMBER_OF_PROCESSORS"):
+            ncpus = int(os.environ["NUMBER_OF_PROCESSORS"]);
+            if ncpus > 0:
+                return ncpus
+        return 1 # Default
 
 
 #-----------------------------------------------------------------------------
