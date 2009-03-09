@@ -40,8 +40,6 @@ def Subst (s, d):
 
 
 class VideoParam:
-    # Video length in seconds
-    length = 0
     # Aspect rate
     aspect = 0
     # Crop boundary
@@ -78,14 +76,14 @@ class AutoConvertAVI:
 
     def FindVideoLengthCrop (self, fn):
         res = VideoParam ()
-        pr (_("Finding video length, crop and size ..."))
+        pr (_("Finding video crop and size ..."))
         sys.stderr.flush ()
 
         for start in (0, 150, 300, 600):
             prevl = ""
             count_equal = 0
             p = Popen3 ("exec mplayer -nouse-filedir-conf -identify -benchmark -vo null " \
-                        "-nosound -vf cropdetect -frames 500 -ss %(start)d %(fn)s " \
+                        "-nosound -vf cropdetect -frames 100 -ss %(start)d %(fn)s " \
                         "2>/dev/null </dev/null" \
                         % { "start" : start, "fn" : Quote (fn).encode (FNENC) })
             while True:
@@ -98,14 +96,16 @@ class AutoConvertAVI:
                     break
                 prevl = l
                 l = re.sub (r"^V:.*\r", "", l.strip ())
-                if re.match (r"^ID_LENGTH=", l):
-                    res.length = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
-                elif re.match (r"^ID_VIDEO_ASPECT=", l):
+                if re.match (r"^ID_VIDEO_ASPECT=", l):
                     res.aspect = float (re.sub (r".*=([.0-9]+)[^.0-9]*", r"\1", l))
                 elif re.match (r"^ID_VIDEO_WIDTH=", l):
-                    res.vw = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                    vw = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                    if vw >= 16:
+                        res.vw = vw;
                 elif re.match (r"^ID_VIDEO_HEIGHT=", l):
-                    res.vh = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                    vh = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                    if vh >= 16:
+                        res.vh = vh;
                 elif re.match (r"^ID_VIDEO_FPS=", l):
                     res.fps = float (re.sub (r".*=([.0-9]+)[^.0-9]*", r"\1", l))
                 elif re.match (r"^crop area", l) or re.match (r"^\[CROP\]", l):
@@ -119,14 +119,20 @@ class AutoConvertAVI:
                     yy [1] = int (yy [1])
 
                     res.ExtendCrop (xx[0], yy[0], xx[1] - xx[0] + 1, yy[1] - yy[0] + 1)
+                elif re.match (r"VDec: vo config request -", l):
+                    bb = re.split (r"(- *| *x *| *\()", l)
+                    if res.vw < 16:
+                        res.vw = int (bb [2]);
+                    if res.vh < 16:
+                        res.vh = int (bb [4]);
 
             # Kill and close process
             os.kill (p.pid, signal.SIGTERM)
             p.wait ()
             del p
 
-        if res.length < 1:
-            pr (_("\nUNEXPECTED ERROR: video length too small\n"))
+        if res.vw < 16 or res.vh < 16:
+            pr (_("\nUNEXPECTED ERROR: video size too small\n"))
             return None
 
         if res.aspect == 0:
@@ -134,7 +140,7 @@ class AutoConvertAVI:
         if res.fps == 0:
             res.fps = 24.97
 
-        pr (" %d (%d,%d %dx%d)\n" %(res.length, res.cx, res.cy, res.cw, res.ch))
+        pr (" (%d,%d %dx%d)\n" %(res.cx, res.cy, res.cw, res.ch))
 
         return res
 
@@ -196,12 +202,13 @@ class AutoConvertAVI:
             return None
 
         # Limit max width/height to cropped width/height
-        tmp = int ((vp.cw + 8) / 16) * 16
-        if options.MaxWidth > tmp:
-            options.MaxWidth = tmp
-        tmp = int ((vp.ch + 8) / 16) * 16
-        if options.MaxHeight > tmp:
-            options.MaxHeight = tmp
+        if options.MaxWidth > 0 and options.MaxHeight > 0:
+            tmp = int ((vp.cw + 4) / 8) * 8
+            if options.MaxWidth > tmp:
+                options.MaxWidth = tmp
+            tmp = int ((vp.ch + 4) / 8) * 8
+            if options.MaxHeight > tmp:
+                options.MaxHeight = tmp
 
         # Compute the aspect ratio of the cropped area
         #srca = vp.aspect * ((float (vp.cw) / vp.ch) / (float (vp.vw) / vp.vh))
@@ -215,7 +222,7 @@ class AutoConvertAVI:
             vp.sh = float (vp.ch)
             vp.sw = vp.sh * srca
 
-        # Limit rescaled size to target device screen size
+        # Limit rescaled size to target size
         if vp.sw > options.Width:
             vp.sh = float (options.Width * vp.sh) / vp.sw
             vp.sw = float (options.Width)
@@ -223,42 +230,44 @@ class AutoConvertAVI:
             vp.sw = float (options.Height * vp.sw) / vp.sh
             vp.sh = float (options.Height)
 
-        # For wide-format video, scale it a bit so that it leaves less
-        # unused space on target device screen. This makes image a bit
-        # unproportional, but instead adds to the visible details
-        srca = vp.sw / vp.sh
-        dsta = float (options.Width) / options.Height
-        aratio = (srca / dsta) - 1
-        srca = (1 + (aratio / 2.0)) * dsta
-        if vp.sw == float (options.Width):
-            # Horizontally limited video
-            vp.sh = vp.sw / srca
-        elif vp.sh == float (options.Height):
-            # Vertically limited video
-            vp.sw = vp.sh * srca
+        if options.MaxWidth > 0 and options.MaxHeight > 0:
+            # For wide-format video, scale it a bit so that it leaves less
+            # unused space on target device screen. This makes image a bit
+            # unproportional, but instead adds to the visible details
+            srca = vp.sw / vp.sh
+            dsta = float (options.Width) / options.Height
+            aratio = (srca / dsta) - 1
+            srca = (1 + (aratio / 2.0)) * dsta
+            if vp.sw == float (options.Width):
+                # Horizontally limited video
+                vp.sh = vp.sw / srca
+            elif vp.sh == float (options.Height):
+                # Vertically limited video
+                vp.sw = vp.sh * srca
 
-        # See if we have bandwidth reserve, which is the case
-        # if our video does not fully cover the target size.
-        ratio = math.sqrt ((options.Width * options.Height) / (vp.sw * vp.sh))
-        if ratio > 1:
-            ratio_w = options.MaxWidth / vp.sw
-            ratio_h = options.MaxHeight / vp.sh
-            if ratio > ratio_w:
-                ratio = ratio_w
-            if ratio > ratio_h:
-                ratio = ratio_h
-            vp.sw *= ratio
-            vp.sh *= ratio
+            # See if we have bandwidth reserve, which is the case
+            # if our video does not fully cover the target size.
+            ratio = math.sqrt ((options.Width * options.Height) / (vp.sw * vp.sh))
+            if ratio > 1:
+                ratio_w = options.MaxWidth / vp.sw
+                ratio_h = options.MaxHeight / vp.sh
+                if ratio > ratio_w:
+                    ratio = ratio_w
+                if ratio > ratio_h:
+                    ratio = ratio_h
+                vp.sw *= ratio
+                vp.sh *= ratio
 
-        # Allow only sizes multiple of 16 (macroblock size).
-        vp.sw = int ((vp.sw + 8) / 16) * 16
-        vp.sh = int ((vp.sh + 8) / 16) * 16
+        # Allow only sizes multiple of 8 (macroblock size).
+        vp.sw = int ((vp.sw + 4) / 8) * 8
+        vp.sh = int ((vp.sh + 4) / 8) * 8
 
         # Last dirty check (should never happen, but who knows)
-        if vp.sw > options.MaxWidth:
-            vp.sw = options.MaxWidth
-        if vp.sh > options.MaxHeight:
-            vp.sh = options.MaxHeight
+        if options.MaxWidth > 0 and options.MaxHeight > 0:
+            if vp.sw > options.MaxWidth:
+                vp.sw = options.MaxWidth
+            if vp.sh > options.MaxHeight:
+                vp.sh = options.MaxHeight
 
         # Prepare the command line parameters
         if options.PassAudio:
@@ -273,7 +282,11 @@ class AutoConvertAVI:
             vf = AddFilter (vf, _("video"), options.vf)
         if options.Deint:
             vf = AddFilter (vf, _("video"), "yadif")
-        vf = AddFilter (vf, _("video"), "pp=ha/va/dr")
+        need_filter = True;
+        if preset.has_key ("VideoPostproc"):
+            need_filter = preset ["VideoPostproc"]
+        if need_filter:
+            vf = AddFilter (vf, _("video"), "pp=ha/va/dr")
         if vp.cx != 0 or vp.cy != 0 or vp.cw != vp.vw or vp.ch != vp.vh:
             vf = AddFilter (vf, _("video"), "crop=%d:%d:%d:%d" %(vp.cw, vp.ch, vp.cx, vp.cy))
         if options.Denoise:

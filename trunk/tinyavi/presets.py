@@ -44,8 +44,20 @@ vc = {
             2 : lambda w, h, fps: { "bitrate" : (w * h * fps) / 6000 },
         },
         "Options" : [
-            "-ovc x264 -x264encopts bitrate=%(bitrate)d:frameref=6:analyse=all:me=umh:subme=7:trellis=2:bframes=1:subq=7:brdo:mixed_refs:weight_b:bime:no_fast_pskip:direct_pred=auto:mixed_refs:nr=200:threads=auto:turbo=2:pass=1",
-            "-ovc x264 -x264encopts bitrate=%(bitrate)d:frameref=6:analyse=all:me=umh:subme=7:trellis=2:bframes=1:subq=7:brdo:mixed_refs:weight_b:bime:no_fast_pskip:direct_pred=auto:mixed_refs:nr=200:threads=auto:pass=2"
+            "-of lavf -ovc x264 -x264encopts bitrate=%(bitrate)d:subq=4:bframes=2:b_pyramid:weight_b:threads=auto:pass=1",
+            "-of lavf -ovc x264 -x264encopts bitrate=%(bitrate)d:subq=4:bframes=2:b_pyramid:weight_b:threads=auto:pass=2"
+        ],
+    },
+    # Encode to H.264 by using the high-quality x264 encoder
+    "x264-hq" : {
+        "Quality" : {
+            0 : lambda w, h, fps: { "bitrate" : (w * h * fps) / 10000 },
+            1 : lambda w, h, fps: { "bitrate" : (w * h * fps) / 8000 },
+            2 : lambda w, h, fps: { "bitrate" : (w * h * fps) / 6000 },
+        },
+        "Options" : [
+            "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:b_pyramid:weight_b:threads=auto:pass=1",
+            "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:b_pyramid:weight_b:threads=auto:pass=2"
         ],
     },
 }
@@ -183,5 +195,29 @@ List = {
             "opts2"    : "-lavfopts format=psp"
         },
         "Extension"     : "avi"
+    },
+
+    "HD Ready (H264)": {
+        "Alias"         : "hdr",
+        "VideoWidth"    : 1280,
+        "VideoHeight"   : 720,
+        "MaxWidth"      : 0,
+        "MaxHeight"     : 0,
+        "VideoCodec"    : "x264-hq",
+        "AudioCodec"    : "pass",
+        "Extension"     : "mp4",
+        "VideoPostproc" : False
+    },
+
+    "HD (H264)": {
+        "Alias"         : "hd",
+        "VideoWidth"    : 1920,
+        "VideoHeight"   : 1080,
+        "MaxWidth"      : 0,
+        "MaxHeight"     : 0,
+        "VideoCodec"    : "x264-hq",
+        "AudioCodec"    : "pass",
+        "Extension"     : "mp4",
+        "VideoPostproc" : False
     }
 }
