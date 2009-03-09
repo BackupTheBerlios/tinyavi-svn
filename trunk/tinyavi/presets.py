@@ -205,7 +205,7 @@ List = {
         "MaxHeight"     : 0,
         "VideoCodec"    : "x264-hq",
         "AudioCodec"    : "pass",
-        "Extension"     : "mp4",
+        "Extension"     : "avi",
         "VideoPostproc" : False
     },
 
@@ -217,7 +217,7 @@ List = {
         "MaxHeight"     : 0,
         "VideoCodec"    : "x264-hq",
         "AudioCodec"    : "pass",
-        "Extension"     : "mp4",
+        "Extension"     : "avi",
         "VideoPostproc" : False
     }
 }
