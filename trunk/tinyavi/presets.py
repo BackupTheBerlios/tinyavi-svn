@@ -165,7 +165,7 @@ List = {
     },
 
     "Sony PSP (MPEG4) (untested)": {
-        "Alias"         : "PSP-MP4",
+        "Alias"         : "PSPMP4",
         "VideoWidth"    : 480,
         "VideoHeight"   : 272,
         "MaxWidth"      : 480,
@@ -182,7 +182,7 @@ List = {
     },
 
     "Sony PSP (H264) (untested)": {
-        "Alias"         : "PSP-264",
+        "Alias"         : "PSP264",
         "VideoWidth"    : 480,
         "VideoHeight"   : 272,
         "MaxWidth"      : 480,
@@ -197,7 +197,7 @@ List = {
         "Extension"     : "avi"
     },
 
-    "HD Ready (H264)": {
+    "HD Ready Video": {
         "Alias"         : "HDR",
         "VideoWidth"    : 1280,
         "VideoHeight"   : 720,
@@ -209,7 +209,7 @@ List = {
         "VideoPostproc" : False
     },
 
-    "HD (H264)": {
+    "HD Video": {
         "Alias"         : "HD",
         "VideoWidth"    : 1920,
         "VideoHeight"   : 1080,
