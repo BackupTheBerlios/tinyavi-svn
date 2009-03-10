@@ -16,67 +16,51 @@ msgstr ""
 msgid "TinyAVI video converter"
 msgstr "Преобразователь видеофайлов TinyAVI"
 
-#: share/gui.glade:57
-msgid "Play selected file with current settings (on-the-fly conversion)"
-msgstr "Проиграть файл, используя текущие настройки (преобразование на лету)"
-
-#: share/gui.glade:58
-msgid "gtk-media-play"
-msgstr ""
-
-#: share/gui.glade:70
-msgid "Convert selected file only"
-msgstr "Преобразовать выделенные файлы"
-
-#: share/gui.glade:71
-msgid "gtk-convert"
-msgstr ""
-
-#: share/gui.glade:86
-msgid "Stop converting selected file only"
-msgstr "Остановить преобразование выделенных файлов"
-
-#: share/gui.glade:87
-msgid "gtk-stop"
-msgstr ""
-
-#: share/gui.glade:102
-msgid "gtk-about"
-msgstr ""
-
-#: share/gui.glade:131
+#: share/gui.glade:60
 msgid "Add new video files to the queue"
 msgstr "Добавить новые видеофайлы в очередь"
 
-#: share/gui.glade:132 share/gui.glade:774
+#: share/gui.glade:61 share/gui.glade:745
 msgid "gtk-add"
 msgstr ""
 
-#: share/gui.glade:146
+#: share/gui.glade:75
 msgid "Remove selected video files from the encoding queue"
 msgstr "Удалить выбранные файлы из очереди"
 
-#: share/gui.glade:147
+#: share/gui.glade:76
 msgid "gtk-remove"
 msgstr ""
 
-#: share/gui.glade:163
-msgid "Convert all idle video files"
-msgstr "Преобразовать все файлы"
+#: share/gui.glade:106
+msgid "Play selected file with current settings (on-the-fly conversion)"
+msgstr "Проиграть файл, используя текущие настройки (преобразование на лету)"
 
-#: share/gui.glade:164
-msgid "Convert _All"
-msgstr "Преобразовать _Всё"
+#: share/gui.glade:107
+msgid "gtk-media-play"
+msgstr ""
 
-#: share/gui.glade:180
-msgid "Stop all conversions immediately"
-msgstr "Остановить преобразование всех файлов"
+#: share/gui.glade:119
+msgid "Convert selected file only"
+msgstr "Преобразовать выделенные файлы"
 
-#: share/gui.glade:181
-msgid "Stop A_ll"
-msgstr "Остановить В_сё"
+#: share/gui.glade:120
+msgid "gtk-convert"
+msgstr ""
 
-#: share/gui.glade:214
+#: share/gui.glade:135
+msgid "Stop converting selected file only"
+msgstr "Остановить преобразование выделенных файлов"
+
+#: share/gui.glade:136
+msgid "gtk-stop"
+msgstr ""
+
+#: share/gui.glade:151
+msgid "gtk-about"
+msgstr ""
+
+#: share/gui.glade:185
 msgid ""
 "Select the device on which you're going to watch the resulting video. The "
 "program will automatically choose the most optimal encoding settings for "
@@ -86,11 +70,11 @@ msgstr ""
 "автоматически подберёт наилучшие настройки кодирования, подходящие Вашему "
 "устройству."
 
-#: share/gui.glade:223
+#: share/gui.glade:194
 msgid "<b>Target device</b>"
 msgstr "<b>Целевое устройство</b>"
 
-#: share/gui.glade:245
+#: share/gui.glade:216
 msgid ""
 "The balance between resulting video quality and size.\n"
 "If you want smaller files, choose low quality and vice versa."
@@ -98,7 +82,7 @@ msgstr ""
 "Баланс между качеством результирующего видео и размером.\n"
 "Если Вам важен малый размер файла, выберите низкое качество и наоборот."
 
-#: share/gui.glade:247
+#: share/gui.glade:218
 msgid ""
 "Low/Small\n"
 "Medium/Medium\n"
@@ -108,29 +92,29 @@ msgstr ""
 "Среднее/Средний\n"
 "Высокое/Большой"
 
-#: share/gui.glade:257
+#: share/gui.glade:228
 msgid "<b>Quality/Size</b>"
 msgstr "<b>Качество/Размер</b>"
 
-#: share/gui.glade:314
+#: share/gui.glade:285
 msgid ""
 "Check this if you want a deinterlace filter to be applied on the input video."
 msgstr "Пометьте, если хотите убрать черезстрочность во входном видео."
 
-#: share/gui.glade:315
+#: share/gui.glade:286
 msgid "De_interlace"
 msgstr "Убрать _черезстрочность"
 
-#: share/gui.glade:329
+#: share/gui.glade:300
 msgid ""
 "Check this if you want to apply a light denoise filter on the input video."
 msgstr "Пометьте, если хотите наложить лёгкий шумоподавитель на входное видео."
 
-#: share/gui.glade:330
+#: share/gui.glade:301
 msgid "De_noise"
 msgstr "Подавить _шум"
 
-#: share/gui.glade:345
+#: share/gui.glade:316
 msgid ""
 "Check this if you want to increase a bit the sharpness of the resulting "
 "video.\n"
@@ -141,15 +125,15 @@ msgstr ""
 "ВНИМАНИЕ: это даст более хороший результат, но приведёт к увеличению времени "
 "кодирования примерно в полтора раза."
 
-#: share/gui.glade:347
+#: share/gui.glade:318
 msgid "_Sharpen"
 msgstr "_Резкость"
 
-#: share/gui.glade:368 share/gui.glade:469
+#: share/gui.glade:339 share/gui.glade:440
 msgid "Extra filters:"
 msgstr "Доп. фильтры:"
 
-#: share/gui.glade:379
+#: share/gui.glade:350
 msgid ""
 "Extra video filters to prepend to the list.\n"
 "The format is exactly the same as in the\n"
@@ -159,22 +143,22 @@ msgstr ""
 "основным списком. Формат фильтров такой же,\n"
 "как в опции -vf mencoder'а"
 
-#: share/gui.glade:399
+#: share/gui.glade:370
 msgid "<b>Video settings</b>"
 msgstr "<b>Настройки видео</b>"
 
-#: share/gui.glade:433
+#: share/gui.glade:404
 msgid ""
 "Check this if you don't want audio track to be re-encoded at a lower bitrate."
 msgstr ""
 "Пометьте, если не хотите чтобы звуковая дорожка была перекодирована с более "
 "низким качеством."
 
-#: share/gui.glade:434
+#: share/gui.glade:405
 msgid "_Passthrough"
 msgstr "_Без преобразования"
 
-#: share/gui.glade:447
+#: share/gui.glade:418
 msgid ""
 "Check this if you want to normalize the volume of the audio track. Usually "
 "this is a good idea, especially if the original uses multi-channel ac3 audio."
@@ -183,11 +167,11 @@ msgstr ""
 "хорошая идея для любого видео, в особенности если исходный файл использует "
 "многоканальное ac3 аудио."
 
-#: share/gui.glade:448
+#: share/gui.glade:419
 msgid "N_ormalize"
 msgstr "_Нормализовать"
 
-#: share/gui.glade:480
+#: share/gui.glade:451
 msgid ""
 "Extra audio filters to prepend to the list.\n"
 "The format is exactly the same as in the\n"
@@ -197,27 +181,27 @@ msgstr ""
 "основным списком. Формат фильтров такой же,\n"
 "как в опции -af mencoder'а."
 
-#: share/gui.glade:500
+#: share/gui.glade:471
 msgid "<b>Audio settings</b>"
 msgstr "<b>Настройки звука</b>"
 
-#: share/gui.glade:528
+#: share/gui.glade:499
 msgid "Number of CPUs to use:"
 msgstr "Количество процессоров:"
 
-#: share/gui.glade:540
+#: share/gui.glade:511
 msgid "Number of simultaneous conversion processes to start"
 msgstr "Количество одновременно запущенных процессов преобразования"
 
-#: share/gui.glade:575
+#: share/gui.glade:546
 msgid "Target device screen width"
 msgstr "Ширина экрана целевого устройства"
 
-#: share/gui.glade:591
+#: share/gui.glade:562
 msgid "Target device screen height"
 msgstr "Высота экрана целевого устройства"
 
-#: share/gui.glade:636
+#: share/gui.glade:607
 msgid ""
 "Note: The final video size may be different due to movie aspect ratio.\n"
 "This setting just defines the screen size of your target device."
@@ -226,15 +210,15 @@ msgstr ""
 "учёта соотношения сторон исходного видеофайла.\n"
 "Эта настройка просто задаёт размер экрана целевого устройства."
 
-#: share/gui.glade:638
+#: share/gui.glade:609
 msgid "<b>Target device screen size</b>"
 msgstr "<b>Размер экрана устройства</b>"
 
-#: share/gui.glade:668
+#: share/gui.glade:639
 msgid "Output file name:"
 msgstr "Название выходного файла:"
 
-#: share/gui.glade:679
+#: share/gui.glade:650
 msgid ""
 "The rule to build output file name.\n"
 "%(dir)s will be replaced with the directory of the original file\n"
@@ -246,27 +230,27 @@ msgstr ""
 "%(name)s будет заменён на имя исходного файла\n"
 "%(ext)s будет заменён на расширение по умолчанию"
 
-#: share/gui.glade:700
+#: share/gui.glade:671
 msgid "Settings"
 msgstr "Настройки"
 
-#: share/gui.glade:744
+#: share/gui.glade:715
 msgid "Add a new video file to the queue"
 msgstr "Добавить новый видеофайл в очередь"
 
-#: share/gui.glade:785
+#: share/gui.glade:756
 msgid "gtk-cancel"
 msgstr ""
 
-#: share/gui.glade:805
+#: share/gui.glade:776
 msgid "About TinyAVI"
 msgstr "О программе TinyAVI"
 
-#: share/gui.glade:812
+#: share/gui.glade:783
 msgid "Copyright (C) 2008 Andrew Zabolotny"
 msgstr "Авторское право (C) 2008 Андрей Заболотный"
 
-#: share/gui.glade:813
+#: share/gui.glade:784
 msgid ""
 "The easy video converter for portable devices\n"
 "Dedicated to my daughter Alice"
@@ -274,7 +258,7 @@ msgstr ""
 "Простой видеоконвертер для переносных устройств\n"
 "Посвящается моей дочке Алисе"
 
-#: share/gui.glade:816
+#: share/gui.glade:787
 msgid "Go to homepage"
 msgstr "Посетить домашнюю страницу"
 
@@ -283,44 +267,44 @@ msgstr "Посетить домашнюю страницу"
 msgid "Adding %(desc)s filter: %(filt)s\n"
 msgstr "Добавляем %(desc)s фильтр: %(filt)s\n"
 
-#: tinyavi/autoconvert.py:81
-msgid "Finding video length, crop and size ..."
-msgstr "Определяем длину, кадрирование и размер ..."
+#: tinyavi/autoconvert.py:79
+msgid "Finding video crop and size ..."
+msgstr "Определяем кадрирование и размер ..."
 
-#: tinyavi/autoconvert.py:129
+#: tinyavi/autoconvert.py:135
 msgid ""
 "\n"
-"UNEXPECTED ERROR: video length too small\n"
+"UNEXPECTED ERROR: video size too small\n"
 msgstr ""
 "\n"
-"НЕОЖИДАННАЯ ОШИБКА: длина видео слишком мала\n"
+"НЕОЖИДАННАЯ ОШИБКА: размер видео слишком мал\n"
 
-#: tinyavi/autoconvert.py:142
+#: tinyavi/autoconvert.py:148
 #, python-format
 msgid "Analysing file %s\n"
 msgstr "Анализируем файл %s\n"
 
-#: tinyavi/autoconvert.py:145
+#: tinyavi/autoconvert.py:151
 #, python-format
 msgid "ERROR: file `%s' does not exist or is not readable\n"
 msgstr "ОШИБКА: файл `%s' не существует или недоступен\n"
 
-#: tinyavi/autoconvert.py:149
+#: tinyavi/autoconvert.py:155
 #, python-format
 msgid "ERROR: Quality value is not allowed (%d)\n"
 msgstr "ОШИБКА: Неверное значение для качества (%d)\n"
 
-#: tinyavi/autoconvert.py:158
-#, python-format
-msgid "Using target media player preset `%s'\n"
-msgstr "Используем профиль целевого устройства `%s'\n"
-
-#: tinyavi/autoconvert.py:162
+#: tinyavi/autoconvert.py:172
 #, python-format
 msgid "ERROR: unknown target media player `%s'\n"
 msgstr "ОШИБКА: неизвестное целевое устройство `%s'\n"
 
-#: tinyavi/autoconvert.py:184
+#: tinyavi/autoconvert.py:175
+#, python-format
+msgid "Using target media player preset `%s'\n"
+msgstr "Используем профиль целевого устройства `%s'\n"
+
+#: tinyavi/autoconvert.py:197
 #, python-format
 msgid ""
 "Invalid output file mask:\n"
@@ -329,29 +313,29 @@ msgstr ""
 "Ошибочная маска выходного файла:\n"
 "%s"
 
-#: tinyavi/autoconvert.py:187
+#: tinyavi/autoconvert.py:201
 #, python-format
 msgid "Resulting video file: %s\n"
 msgstr "Перекодированный файл: %s\n"
 
-#: tinyavi/autoconvert.py:194
+#: tinyavi/autoconvert.py:208
 msgid "ERROR: failed to determine video/crop width and/or height\n"
 msgstr ""
 "ОШИБКА: не могу определить размер кадра, либо размер его заполненной части\n"
 
-#: tinyavi/autoconvert.py:272 tinyavi/autoconvert.py:274
-#: tinyavi/autoconvert.py:275 tinyavi/autoconvert.py:277
-#: tinyavi/autoconvert.py:279 tinyavi/autoconvert.py:281
-#: tinyavi/autoconvert.py:283 tinyavi/autoconvert.py:292
+#: tinyavi/autoconvert.py:289 tinyavi/autoconvert.py:291
+#: tinyavi/autoconvert.py:296 tinyavi/autoconvert.py:298
+#: tinyavi/autoconvert.py:300 tinyavi/autoconvert.py:302
+#: tinyavi/autoconvert.py:304 tinyavi/autoconvert.py:313
 msgid "video"
 msgstr "видео"
 
-#: tinyavi/autoconvert.py:286 tinyavi/autoconvert.py:288
-#: tinyavi/autoconvert.py:295
+#: tinyavi/autoconvert.py:307 tinyavi/autoconvert.py:309
+#: tinyavi/autoconvert.py:316
 msgid "audio"
 msgstr "аудио"
 
-#: tinyavi/autoconvert.py:352
+#: tinyavi/autoconvert.py:373
 msgid "Analysing finished\n"
 msgstr "Анализ завершён\n"
 
@@ -407,7 +391,7 @@ msgstr "Название видеофайла"
 msgid "Status"
 msgstr "Состояние"
 
-#: tinyavi/gui.py:192
+#: tinyavi/gui.py:198
 #, python-format
 msgid ""
 "Failed to save configuration file:\n"
@@ -518,3 +502,4 @@ msgstr "ОШИБКА: преобразование не удалось\n"
 #: tavi:131
 msgid "All done\n"
 msgstr "Процесс завершён\n"
+

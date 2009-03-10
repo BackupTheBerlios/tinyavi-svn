@@ -85,13 +85,12 @@ class TinyAviGui:
             "on_ButtonStop_clicked" : self.on_ButtonStop_clicked,
             "on_ButtonAdd_clicked" : self.on_ButtonAdd_clicked,
             "on_ButtonRemove_clicked" : self.on_ButtonRemove_clicked,
-            "on_ButtonConvertAll_clicked" : self.on_ButtonConvertAll_clicked,
-            "on_ButtonStopAll_clicked" : self.on_ButtonStopAll_clicked,
             "on_ButtonAbout_clicked" : self.on_ButtonAbout_clicked,
             "on_ComboVideoSize_changed" : self.on_ComboVideoSize_changed,
             "on_SpinVideoSize_changed" : self.on_SpinVideoSize_changed,
             "on_PresetList_changed" : self.on_PresetList_changed,
-            "on_VideoList_drag_data_received" : self.on_VideoList_drag_data_received
+            "on_VideoList_drag_data_received" : self.on_VideoList_drag_data_received,
+            "on_VideoList_button_press_event" : self.on_VideoList_button_press_event
         })
 
         # Initialize the list view
@@ -189,7 +188,9 @@ class TinyAviGui:
 
 
     def on_MainWindow_destroy (self, win):
-        self.on_ButtonStopAll_clicked (win)
+        for fi in self.ListStore:
+            if fi [2] in self.Queue or fi [0] == self._Queued:
+                self.ConvertStop (fi, self._Aborted)
         # Read the values of the controls
         self.cfg.ReadControls (self)
         # Save config file
@@ -200,17 +201,17 @@ class TinyAviGui:
 
 
     def on_ButtonPlay_clicked (self, but):
-        for idx in self.GetSelectedVideo ():
+        for idx in self.GetSelectedFiles ():
             self.ListStore [idx][0] = self._Playing
 
 
     def on_ButtonConvert_clicked (self, but):
-        for idx in self.GetSelectedVideo ():
+        for idx in self.GetSelectedFiles ():
             self.QueueFile (self.ListStore [idx])
 
 
     def on_ButtonStop_clicked (self, but):
-        for idx in self.GetSelectedVideo ():
+        for idx in self.GetSelectedFiles ():
             self.ConvertStop (self.ListStore [idx], self._Aborted)
 
 
@@ -229,7 +230,7 @@ class TinyAviGui:
         self.on_ButtonStop_clicked (but)
         r = self.ListStore.get_iter_first ()
         c = 0
-        for idx in self.GetSelectedVideo ():
+        for idx in self.GetSelectedFiles ():
             while c < idx:
                 c += 1
                 r = self.ListStore.iter_next (r)
@@ -240,17 +241,6 @@ class TinyAviGui:
 
             self.ListStore.remove (r)
             c += 1
-
-    def on_ButtonConvertAll_clicked (self, but):
-        for fi in self.ListStore:
-            if not fi [2] in self.Queue:
-                self.QueueFile (fi)
-
-
-    def on_ButtonStopAll_clicked (self, but):
-        for fi in self.ListStore:
-            if fi [2] in self.Queue or fi [0] == self._Queued:
-                self.ConvertStop (fi, self._Aborted)
 
 
     def on_ComboVideoSize_changed (self, cb):
@@ -271,15 +261,28 @@ class TinyAviGui:
 
     def on_VideoList_cursor_changed (self, tv):
         c = tv.get_cursor () [0][0]
-        s = self.GetSelectedVideo ()
+        s = self.GetSelectedFiles ()
         if c in s:
             self.LogSwitch (self.ListStore [c][2])
 
 
-    def on_VideoList_drag_data_received (self, treeview, context, x, y, selection, info, etime):
+    def on_VideoList_drag_data_received (self, tv, context, x, y, selection, info, etime):
         for x in selection.data.split ():
             self.AddFile (self.Uri2Filename (x).decode (FNENC))
 
+
+    def on_VideoList_button_press_event (self, tv, event):
+        if (event.type != gtk.gdk.BUTTON_PRESS) or (event.button != 3):
+            return False
+
+        model = tv.get_model ()
+        if model.get_iter_first ():
+            if len (tv.get_selection ().get_selected_rows () [1]) == 0:
+                tv.get_selection ().select_all ()
+            else:
+                tv.get_selection ().unselect_all ()
+
+        return True
 
     def on_ButtonAbout_clicked (self, but):
         abd = self.glade.get_widget ("AboutDialog")
@@ -416,7 +419,8 @@ class TinyAviGui:
                 return False
 
             cmdl.append ("-P")
-            p = subprocess.Popen (cmdl, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen (cmdl, close_fds=True, stdin=subprocess.PIPE, \
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             fcntl.fcntl (p.stdout, fcntl.F_SETFL, os.O_NDELAY)
             fcntl.fcntl (p.stderr, fcntl.F_SETFL, os.O_NDELAY)
             self.Queue [fi [2]] = [p, "", None, 1]
@@ -438,8 +442,8 @@ class TinyAviGui:
                 return False
 
             tmpdir = tempfile.mkdtemp ()
-            p = subprocess.Popen(cmdl, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                cwd=tmpdir)
+            p = subprocess.Popen(cmdl, close_fds=True, stdin=subprocess.PIPE, \
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=tmpdir)
             fcntl.fcntl (p.stdout, fcntl.F_SETFL, os.O_NDELAY)
             fcntl.fcntl (p.stderr, fcntl.F_SETFL, os.O_NDELAY)
             self.Queue [fi [2]] = [p, "", tmpdir, 1]
@@ -452,6 +456,7 @@ class TinyAviGui:
     def ConvertStop (self, fi, status = None):
         if self.Queue.has_key (fi [2]):
             q = self.Queue [fi [2]]
+            q [0].stdin.close ()
             q [0].stdout.close ()
             q [0].stderr.close ()
             del self.Queue [fi [2]]
@@ -547,8 +552,11 @@ class TinyAviGui:
         return widget.get_model ().get_value (iter, 0)
 
 
-    def GetSelectedVideo (self):
+    def GetSelectedFiles (self):
         sel = self.VideoList.get_selection ().get_selected_rows() [1]
+        if len (sel) == 0:
+            self.VideoList.get_selection ().select_all ()
+            sel = self.VideoList.get_selection ().get_selected_rows() [1]
         return [x [0] for x in sel]
 
 
