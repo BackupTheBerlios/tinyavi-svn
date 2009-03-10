@@ -198,7 +198,7 @@ List = {
     },
 
     "HD Ready (H264)": {
-        "Alias"         : "hdr",
+        "Alias"         : "HDR",
         "VideoWidth"    : 1280,
         "VideoHeight"   : 720,
         "MaxWidth"      : 0,
@@ -210,7 +210,7 @@ List = {
     },
 
     "HD (H264)": {
-        "Alias"         : "hd",
+        "Alias"         : "HD",
         "VideoWidth"    : 1920,
         "VideoHeight"   : 1080,
         "MaxWidth"      : 0,

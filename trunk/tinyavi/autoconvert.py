@@ -158,15 +158,22 @@ class AutoConvertAVI:
         preset = None
         upper_target = options.Target.upper ()
         for x in presets.List:
-            if (upper_target == presets.List [x]["Alias"]) or \
-               (x.upper ().find (upper_target) >= 0):
-                preset = presets.List [x]
-                pr (_("Using target media player preset `%s'\n") % x)
+            if upper_target == presets.List [x]["Alias"]:
+                preset = x
                 break
+
+        if not preset:
+            for x in presets.List:
+                if x.upper ().find (upper_target) >= 0:
+                    preset = x
+                    break
 
         if not preset:
             pr (_("ERROR: unknown target media player `%s'\n") % options.Target)
             return None
+
+        pr (_("Using target media player preset `%s'\n") % preset)
+        preset = presets.List [x]
 
         if not options.Width:
             options.Width = preset ["VideoWidth"]
