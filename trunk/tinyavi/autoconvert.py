@@ -12,7 +12,7 @@ import math
 import gettext
 import signal
 import locale
-from popen2 import Popen3
+from subprocess import Popen, PIPE, STDOUT
 from tinyavi import presets, FNENC
 
 
@@ -78,16 +78,17 @@ class AutoConvertAVI:
         res = VideoParam ()
         pr (_("Finding video crop and size ..."))
         sys.stderr.flush ()
+        DEVNULL = open ("/dev/null", "rw")
 
         for start in (0, 150, 300, 600):
             prevl = ""
             count_equal = 0
-            p = Popen3 ("exec mplayer -nouse-filedir-conf -identify -benchmark -vo null " \
-                        "-nosound -vf cropdetect -frames 100 -ss %(start)d %(fn)s " \
-                        "2>/dev/null </dev/null" \
-                        % { "start" : start, "fn" : Quote (fn).encode (FNENC) })
+            p = Popen (["mplayer", "-nouse-filedir-conf", "-identify", "-benchmark", \
+                        "-vo", "null", "-nosound", "-vf", "cropdetect", "-frames", "100", \
+                        "-ss", str (start), fn.encode (FNENC)], \
+                        stdin = DEVNULL, stdout = PIPE, stderr = DEVNULL)
             while True:
-                l = p.fromchild.readline ()
+                l = p.stdout.readline ()
                 if l == prevl:
                     count_equal += 1
                 else:
@@ -130,6 +131,7 @@ class AutoConvertAVI:
             os.kill (p.pid, signal.SIGTERM)
             p.wait ()
             del p
+            del DEVNULL
 
         if res.vw < 16 or res.vh < 16:
             pr (_("\nUNEXPECTED ERROR: video size too small\n"))
@@ -157,32 +159,35 @@ class AutoConvertAVI:
 
         preset = None
         upper_target = options.Target.upper ()
-        for x in presets.List:
-            if upper_target == presets.List [x]["Alias"]:
-                preset = x
-                break
+        if presets.List.has_key (upper_target):
+            preset = presets.List [upper_target]
 
         if not preset:
             for x in presets.List:
-                if x.upper ().find (upper_target) >= 0:
+                if presets.List [x]["Device"].upper ().find (upper_target) >= 0:
                     preset = x
                     break
 
         if not preset:
-            pr (_("ERROR: unknown target media player `%s'\n") % options.Target)
+            pr (_("ERROR: unknown target profile `%s'\n") % options.Target)
             return None
 
-        pr (_("Using target media player preset `%s'\n") % preset)
-        preset = presets.List [x]
+        pr (_("Using target profile `%s'\n") % preset ["Device"])
 
         if not options.Width:
             options.Width = preset ["VideoWidth"]
         if not options.Height:
             options.Height = preset ["VideoHeight"]
         if not options.MaxWidth:
-            options.MaxWidth = preset ["MaxWidth"]
+            if preset.has_key ("MaxWidth"):
+                options.MaxWidth = preset ["MaxWidth"]
+            else:
+                options.MaxWidth = preset ["VideoWidth"]
         if not options.MaxHeight:
-            options.MaxHeight = preset ["MaxHeight"]
+            if preset.has_key ("MaxHeight"):
+                options.MaxHeight = preset ["MaxHeight"]
+            else:
+                options.MaxHeight = preset ["VideoHeight"]
 
         if options.OutFile == None:
             options.OutFile = "%(dir)s/%(name)s-tiny.%(ext)s"
@@ -190,7 +195,7 @@ class AutoConvertAVI:
         fn = os.path.realpath (fn.encode (FNENC)).decode (FNENC)
         dn = os.path.dirname (fn)
         bn = os.path.splitext (os.path.basename (fn)) [0]
-        ex = preset ["Extension"]
+        ex = preset.get ("Extension", "avi")
         try:
             self.outfile = options.OutFile % {"dir": dn, "name": bn, "ext": ex}
         except:
@@ -289,9 +294,7 @@ class AutoConvertAVI:
             vf = AddFilter (vf, _("video"), options.vf)
         if options.Deint:
             vf = AddFilter (vf, _("video"), "yadif")
-        need_filter = True;
-        if preset.has_key ("VideoPostproc"):
-            need_filter = preset ["VideoPostproc"]
+        need_filter = preset.get ("VideoPostproc", True)
         if need_filter:
             vf = AddFilter (vf, _("video"), "pp=ha/va/dr")
         if vp.cx != 0 or vp.cy != 0 or vp.cw != vp.vw or vp.ch != vp.vh:

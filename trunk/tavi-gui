@@ -6,7 +6,7 @@ __author__ = "Andrew Zabolotny"
 __email__ = "zap@homelink.ru"
 __license__ = """
 TinyAVI-GUI - a graphical user interface to the TinyAVI tool
-Copyright (C) 2008 Andrew Zabolotny <zap@homelink.ru>
+Copyright (C) 2008,2009 Andrew Zabolotny <zap@homelink.ru>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -54,6 +54,7 @@ class TinyAviGui:
         # Cache most used widgets into variables
         for widget in "MainWindow", "VideoList", "PresetList", "SpinCPUs", "Log", \
                       "SpinVideoWidth", "SpinVideoHeight", "EntryOutputFileMask", \
+                      "EntryOutDirHBox", "EntryOutDir", "ButtonOutDirSelect", \
                       "SpinCPUs", "CheckDeinterlace", "CheckDenoise", \
                       "CheckSharpen", "CheckAudioPassthrough", "CheckAudioNormalize", \
                       "EncodeQuality", "ComboVideoSize", "AdvancedSettingsVBox",  \
@@ -89,6 +90,7 @@ class TinyAviGui:
             "on_ComboVideoSize_changed" : self.on_ComboVideoSize_changed,
             "on_SpinVideoSize_changed" : self.on_SpinVideoSize_changed,
             "on_PresetList_changed" : self.on_PresetList_changed,
+            "on_ButtonOutDirSelect_clicked" : self.on_ButtonOutDirSelect_clicked,
             "on_VideoList_drag_data_received" : self.on_VideoList_drag_data_received,
             "on_VideoList_button_press_event" : self.on_VideoList_button_press_event
         })
@@ -113,6 +115,8 @@ class TinyAviGui:
             self.VideoFiltersHBox.hide ()
             self.AudioFiltersHBox.hide ()
             self.EntryOutputHBox.hide ()
+        else:
+            self.EntryOutDirHBox.hide ()
 
         # Initialize file open dialog filters
         afd = self.glade.get_widget ("AddFileDialog")
@@ -173,12 +177,12 @@ class TinyAviGui:
         self.PresetListStore = gtk.ListStore (str)
         cell = gtk.CellRendererText ()
         self.PresetList.pack_start (cell, True)
-        self.PresetList.add_attribute (cell, 'text', 0)  
+        self.PresetList.add_attribute (cell, 'text', 0)
 
         k = presets.List.keys ()
         k.sort ()
         for x in k:
-            self.PresetListStore.append ([x])
+            self.PresetListStore.append ([presets.List [x]["Device"]])
 
         self.PresetList.set_model (self.PresetListStore)
         self.PresetList.set_active (0)
@@ -299,6 +303,19 @@ class TinyAviGui:
         preset = presets.List [pn]
         self.SpinVideoWidth.set_value (preset ["VideoWidth"])
         self.SpinVideoHeight.set_value (preset ["VideoHeight"])
+
+
+    def on_ButtonOutDirSelect_clicked (self, but):
+        dsd = self.glade.get_widget ("DirSelDialog")
+
+        if dsd.run () == gtk.RESPONSE_ACCEPT:
+            for fn in dsd.get_filenames ():
+                self.cfg.OutDir = fn.decode (FNENC)
+
+        dsd.unselect_all ()
+        dsd.hide ()
+        self.UpdateFileMask ()
+        self.EntryOutDir.set_text (self.cfg.OutDir)
 
 
     # -------------------- # Application log handling # -------------------- #
@@ -592,6 +609,14 @@ class TinyAviGui:
                 return ncpus
         return 1 # Default
 
+    def UpdateFileMask(self):
+        # In Simple UI mode transform outdir to outfilemask
+        if not self.cfg.Advanced:
+            if self.cfg.OutDir == "":
+                self.cfg.OutFileMask = "%(dir)s/%(name)s-tiny.%(ext)s"
+            else:
+                self.cfg.OutFileMask = self.cfg.OutDir + "/%(name)s.%(ext)s"
+
 
 #-----------------------------------------------------------------------------
 #                          The program config storage
@@ -602,6 +627,7 @@ class TinyAviConfig:
     # exactly in the sequence they are listed here.
     attrs = [
         ['OutFileMask', 's', 'EntryOutputFileMask',   'TinyAVI'],
+        ['OutDir',      's', 'EntryOutDir',           'TinyAVI'],
         ['NumCPUs',     'i', 'SpinCPUs',              'TinyAVI'],
         ['Preset',      'l', 'PresetList',            'TinyAVI'],
         ['Quality',     'l', 'EncodeQuality',         'TinyAVI'],
@@ -725,13 +751,15 @@ class TinyAviConfig:
         for attr in self.attrs:
             self.ReadControl (gui, attr)
 
+        gui.UpdateFileMask ()
+
 
     # Read the state of a single control
     def ReadControl (self, gui, attr):
         if attr [2]:
             setattr (self, attr [0],
                 {
-                    's': lambda: getattr (gui, attr [2]).get_text (),
+                    's': lambda: getattr (gui, attr [2]).get_text ().strip (),
                     'l': lambda: getattr (gui, attr [2]).get_active (),
                     'i': lambda: int (getattr (gui, attr [2]).get_value ()),
                     'b': lambda: bool (getattr (gui, attr [2]).get_active ())

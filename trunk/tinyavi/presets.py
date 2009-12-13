@@ -83,7 +83,7 @@ ac = {
         ],
     },
     # Encode to ac3 audio
-    "lavc-aac" : {
+    "aac" : {
         "Quality" : {
             0 : lambda: { "quality" : 80 },
             1 : lambda: { "quality" : 100 },
@@ -95,25 +95,35 @@ ac = {
             # is horrible, it floats and clicks.
             "-oac faac -faacopts quality=%(quality)d:object=2"
         ]
+    },
+    # Encode to mp2 audio
+    "mp2" : {
+        "Quality" : {
+            0 : lambda: { "quality" : 96 },
+            1 : lambda: { "quality" : 128 },
+            2 : lambda: { "quality" : 160 },
+        },
+        "Options" : [
+            "-nosound",
+            "-oac lavc -lavcopts acodec=mp2:abitrate=%(quality)d"
+        ]
     }
 }
 
 # Note1: It is adviced that target width and height must be multiple of 16!
-# Note2: Aliase MUST BE UPPERCASE!
+# Note2: Preset IDs MUST BE UPPERCASE!
 List = {
-    "Cowon D2": {
-        "Alias"         : "CD2",
+    "CD2": {
+        "Device"        : "Cowon D2",
         "VideoWidth"    : 320,
         "VideoHeight"   : 240,
-        "MaxWidth"      : 320,
-        "MaxHeight"     : 240,
         "VideoCodec"    : "xvid",
-        "AudioCodec"    : "lame",
-        "Extension"     : "avi"
+        "AudioCodec"    : "lame"
     },
 
-    "Aero Vision photo frame": {
-        "Alias"         : "AV",
+    "AV": {
+        "Device"        : "Aero Vision",
+        "Comment"       : "photo frame",
         "VideoWidth"    : 400,
         "VideoHeight"   : 240,
         "MaxWidth"      : 800,
@@ -121,14 +131,14 @@ List = {
         "VideoCodec"    : "xvid",
         "AudioCodec"    : "lame",
         "VideoOptions"  : {
-            "opts1"    : "-xvidencopts max_bframes=0",
-            "opts2"    : "-xvidencopts max_bframes=0"
-        },
-        "Extension"     : "avi"
+            "opts1"     : "-xvidencopts max_bframes=0",
+            "opts2"     : "-xvidencopts max_bframes=0"
+        }
     },
 
-    "Nokia N8x0 (GStreamer engine)": {
-        "Alias"         : "N8X0",
+    "N8X0": {
+        "Device"        : "Nokia N8x0",
+        "Comment"       : "GStreamer engine",
         "VideoWidth"    : 400,
         "VideoHeight"   : 240,
         "MaxWidth"      : 800,
@@ -136,88 +146,113 @@ List = {
         "VideoCodec"    : "xvid",
         "AudioCodec"    : "lame",
         "VideoOptions"  : {
-            "opts1"    : "-xvidencopts max_bframes=0",
-            "opts2"    : "-xvidencopts max_bframes=0"
-        },
-        "Extension"     : "avi"
+            "opts1"     : "-xvidencopts max_bframes=0",
+            "opts2"     : "-xvidencopts max_bframes=0"
+        }
     },
 
-    "Nokia N8x0 (MPlayer engine - best)": {
-        "Alias"         : "N8X0MP",
+    "N8X0MP": {
+        "Device"        : "Nokia N8x0",
+        "Comment"       : "MPlayer engine - best",
         "VideoWidth"    : 512,
         "VideoHeight"   : 304,
         "MaxWidth"      : 800,
         "MaxHeight"     : 480,
         "VideoCodec"    : "xvid",
-        "AudioCodec"    : "lame",
-        "Extension"     : "avi"
+        "AudioCodec"    : "lame"
     },
 
-    "iPOD (untested)": {
-        "Alias"         : "IPOD",
+    "IPOD": {
+        "Device"        : "iPOD",
+        "Comment"       : "untested",
         "VideoWidth"    : 320,
         "VideoHeight"   : 240,
-        "MaxWidth"      : 320,
-        "MaxHeight"     : 240,
         "VideoCodec"    : "xvid",
-        "AudioCodec"    : "lavc-aac",
-        "Extension"     : "avi"
+        "AudioCodec"    : "aac"
     },
 
-    "Sony PSP (MPEG4) (untested)": {
-        "Alias"         : "PSPMP4",
+    "PSPMP4": {
+        "Device"        : "Sony PSP",
+        "Comment"       : "MPEG4, untested",
         "VideoWidth"    : 480,
         "VideoHeight"   : 272,
-        "MaxWidth"      : 480,
-        "MaxHeight"     : 272,
         "VideoCodec"    : "lavc-mpeg4",
         "VideoFilter"   : [ "harddup" ],
-        "AudioCodec"    : "lavc-aac",
+        "AudioCodec"    : "aac",
         "AudioFilter"   : [ "lavcresample=24000" ],
         "VideoOptions"  : {
-            "opts1"    : "-lavfopts format=psp",
-            "opts2"    : "-lavfopts format=psp"
+            "opts1"     : "-lavfopts format=psp",
+            "opts2"     : "-lavfopts format=psp"
         },
         "Extension"     : "mp4"
     },
 
-    "Sony PSP (H264) (untested)": {
-        "Alias"         : "PSP264",
+    "PSP264": {
+        "Device"        : "Sony PSP",
+        "Comment"       : "H264, untested",
         "VideoWidth"    : 480,
         "VideoHeight"   : 272,
-        "MaxWidth"      : 480,
-        "MaxHeight"     : 272,
         "VideoCodec"    : "x264",
-        "AudioCodec"    : "lavc-aac",
+        "AudioCodec"    : "aac",
         "AudioFilter"   : [ "lavcresample=48000" ],
         "VideoOptions"  : {
-            "opts1"    : "-lavfopts format=psp",
-            "opts2"    : "-lavfopts format=psp"
+            "opts1"     : "-lavfopts format=psp",
+            "opts2"     : "-lavfopts format=psp"
         },
         "Extension"     : "avi"
     },
 
-    "HD Ready Video": {
-        "Alias"         : "HDR",
+    "HDR": {
+        "Device"        : "Generic",
+        "Comment"       : "HD Ready Video",
         "VideoWidth"    : 1280,
         "VideoHeight"   : 720,
         "MaxWidth"      : 0,
         "MaxHeight"     : 0,
         "VideoCodec"    : "x264-hq",
         "AudioCodec"    : "pass",
-        "Extension"     : "avi",
         "VideoPostproc" : False
     },
 
-    "HD Video": {
-        "Alias"         : "HD",
+    "HD": {
+        "Device"        : "Generic",
+        "Comment"       : "HD Video",
         "VideoWidth"    : 1920,
         "VideoHeight"   : 1080,
         "MaxWidth"      : 0,
         "MaxHeight"     : 0,
         "VideoCodec"    : "x264-hq",
         "AudioCodec"    : "pass",
-        "Extension"     : "avi",
         "VideoPostproc" : False
+    },
+
+    "TX8X0": {
+        "Device"        : "teXet T-8X0",
+        "Comment"       : "models 800, 810, 820, 840",
+        "VideoWidth"    : 320,
+        "VideoHeight"   : 240,
+        "VideoCodec"    : "xvid",
+        "AudioCodec"    : "mp2",
+        "AudioFilter"   : [ "lavcresample=44100" ],
+        "AudioOptions"  : {
+            "opts1"     : "",
+            "opts2"     : "-srate 44100"
+        },
+        "VideoOptions"  : {
+            "opts1"     : "-ofps 22 -xvidencopts max_bframes=0:quant_type=h263",
+            "opts2"     : "-ofps 22 -xvidencopts max_bframes=0:quant_type=h263"
+        }
+    },
+
+    "NX910": {
+        "Device"        : "NEXX NF-910",
+        "VideoWidth"    : 160,
+        "VideoHeight"   : 128,
+        "VideoCodec"    : "xvid",
+        "AudioCodec"    : "lame",
+        "VideoOptions"  : {
+            "opts1"     : "-ofps 25/2",
+            "opts2"     : "-ofps 25/2"
+        },
     }
 }

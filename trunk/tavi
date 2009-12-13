@@ -6,7 +6,7 @@ __author__ = "Andrew Zabolotny"
 __email__ = "zap@homelink.ru"
 __license__ = """
 TinyAVI - convert video to a format suitable for portable devices
-Copyright (C) 2008 Andrew Zabolotny <zap@homelink.ru>
+Copyright (C) 2008,2009 Andrew Zabolotny <zap@homelink.ru>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,12 +41,9 @@ except:
 
 default_target = "CD2"
 target_list = ""
-k = presets.List.keys ()
-k.sort ()
-for x in k:
-    if target_list != "":
-        target_list = target_list + ", "
-    target_list = target_list + '"' + x + '" (' + presets.List [x]["Alias"] + ')';
+sorted_presets = presets.List.keys ()
+sorted_presets.sort ()
+target_list = ", ".join (sorted_presets)
 
 usage = _("%prog [options] [file.avi[ ...]]")
 version = "%prog " + VERSION
@@ -57,6 +54,8 @@ parser.add_option ("-t", "--target",
                    help = _("Target profile (default=\"%(def)s\") (you can use a substring of the preset name, or preset id). Available presets: %(pres)s.") %
                    { "def" : default_target, "pres" : target_list },
                    metavar="PMP", dest = "Target", default = default_target)
+parser.add_option ("-T", "--targets", help = _("Display a detailed list of supported targets"),
+                   action="store_true", dest = "ShowTargets", default = False)
 parser.add_option ("-W", "--width", help = _("Target video width in pixels"),
                    metavar="NUM", dest = "Width", default = None)
 parser.add_option ("", "--maxwidth", help = _("Physical screen width in pixels"),
@@ -90,6 +89,15 @@ parser.add_option ("-q", "--quality",
                    metavar="NUM", dest = "Quality", default = 1)
 
 (options, args) = parser.parse_args ()
+
+if options.ShowTargets:
+    pr (_("Here goes the list of supported target profiles:\n"))
+    for k in sorted_presets:
+        s = k + ":" + "\t" * (2 - len(k)/8) + presets.List [k]["Device"]
+        if presets.List [k].has_key ("Comment"):
+            s = s + " (" + presets.List [k]["Comment"] + ")"
+        sys.stderr.write (s + "\n")
+    sys.exit (0)
 
 if len (args) == 0:
     pr (_("Nothing to do, exiting; use --help for command-line format\n"))
