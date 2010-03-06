@@ -120,7 +120,7 @@ class TinyAviGui:
 
         # Initialize file open dialog filters
         afd = self.glade.get_widget ("AddFileDialog")
-        afd.add_filter (self.MakeFilter (_("Video files"), "video/*", "application/x-flash-video"))
+        afd.add_filter (self.MakeFilter (_("Video files"), "video/*", "application/x-flash-video", "application/vnd.rn-realmedia"))
         afd.add_filter (self.MakeFilter (_("All files"), "@*"))
 
         # Start the worker 'thread'
@@ -182,7 +182,12 @@ class TinyAviGui:
         k = presets.List.keys ()
         k.sort ()
         for x in k:
-            self.PresetListStore.append ([presets.List [x]["Device"]])
+            y = presets.List [x].get ("Comment")
+            if y:
+                y = " (" + y + ")"
+            else:
+                y = ""
+            self.PresetListStore.append ([presets.List [x]["Device"] + y])
 
         self.PresetList.set_model (self.PresetListStore)
         self.PresetList.set_active (0)
@@ -288,6 +293,7 @@ class TinyAviGui:
 
         return True
 
+
     def on_ButtonAbout_clicked (self, but):
         abd = self.glade.get_widget ("AboutDialog")
         abd.set_version (VERSION)
@@ -296,11 +302,13 @@ class TinyAviGui:
 
 
     def on_PresetList_changed (self, list):
-        pn = self.SelectedItem (list)
-        if not presets.List.has_key (pn):
+        targ = self.GetTarget (self.SelectedItem (list))
+
+        preset = presets.List.get (targ)
+        if not preset:
             # should never happen
             return
-        preset = presets.List [pn]
+
         self.SpinVideoWidth.set_value (preset ["VideoWidth"])
         self.SpinVideoHeight.set_value (preset ["VideoHeight"])
 
@@ -379,7 +387,7 @@ class TinyAviGui:
         self.cfg.ReadControls (self)
         cmdl = [ os.path.join (self.BINDIR, "tavi"),
             "-W" + str (self.cfg.Width), "-H" + str (self.cfg.Height),
-            "-t" + self.SelectedItem (self.PresetList) ]
+            "-t" + self.GetTarget (self.SelectedItem (self.PresetList)) ]
         if self.cfg.Deinterlace:
             cmdl.append ("-D")
         if self.cfg.Denoise:
@@ -616,6 +624,22 @@ class TinyAviGui:
                 self.cfg.OutFileMask = "%(dir)s/%(name)s-tiny.%(ext)s"
             else:
                 self.cfg.OutFileMask = self.cfg.OutDir + "/%(name)s.%(ext)s"
+
+
+    def GetTarget (self, dev):
+        try:
+            x = dev.index ('(')
+            comm = dev [x + 1:-1]
+            dev = dev [:x - 1]
+        except:
+            comm = None
+
+        for x in presets.List:
+            if (presets.List [x].get ("Device") == dev) and \
+               (presets.List [x].get ("Comment") == comm):
+                return x
+
+        return None
 
 
 #-----------------------------------------------------------------------------

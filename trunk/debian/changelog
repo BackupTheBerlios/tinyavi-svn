@@ -1,3 +1,30 @@
+tinyavi (0.2.4-1) unstable; urgency=low
+
+  * Added the "HD" (High-Definition video, 1920x1080) and "HDR" (High-Definition Ready,
+    1280x720) targets. This can be used to convert Blue-Ray disk images to smaller
+    video files, and even overbloated HD video files to smaller ones. Unfortunately,
+    mencoder's lavf (including Matroska) container format is currently broken, so
+    for now tavi will output AVI files. Use mkvtools to convert the resulting AVI
+    to the Matroska (mkv) format, if you wish.
+  * New profiles for teXet T-8X0 media players and for NeXX NF-910.
+  * More descriptive target names and short aliases for using with command-line
+    (e.g. "Cowon D2" (CD2), "Nokia N8x0 (MPlayer engine - best)" (N8X0MP) and so on).
+  * New command-line option "-T" to show a descriptive list of supported targets.
+  * Even simpler user interface! The "Convert All" and "Stop All" buttons
+    are gone; instead, you can now select/unselect all files by clicking
+    the right mouse button in the list.
+  * In simple GUI mode show a "output directory" entry field so that user may put
+    the resulting file in a different directory. If output directory is unset (empty)
+    or is the same as the original file, an "-tiny" suffix is appended to resulting
+    file name. Otherwise, the original file name is used (because the directory is
+    different).
+  * RealMedia video files (.rmvb) will be shown in the 'add file' dialog box.
+  * Encoding now is being done at idle priority. This makes the encoding
+    process virtually unnoticeable for your normal activity.
+  * Many smaller enhancements and bugfixes
+
+ -- Andrew Zabolotny <maemo@ubumaemo.home.lan>  Sat, 02 Jan 2010 14:28:10 +0300
+
 tinyavi (0.2.3-1) unstable; urgency=low
 
   * In non-advanced mode the output filename mask is not shown.

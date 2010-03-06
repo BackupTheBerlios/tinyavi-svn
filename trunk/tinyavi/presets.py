@@ -48,7 +48,7 @@ vc = {
             "-of lavf -ovc x264 -x264encopts bitrate=%(bitrate)d:subq=4:bframes=2:b_pyramid:weight_b:threads=auto:pass=2"
         ],
     },
-    # Encode to H.264 by using the high-quality x264 encoder
+    # Encode to H.264 by using the high-quality x264 encoder (HD & HDR)
     "x264-hq" : {
         "Quality" : {
             0 : lambda w, h, fps: { "bitrate" : (w * h * fps) / 10000 },
@@ -58,6 +58,7 @@ vc = {
         "Options" : [
             "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:b_pyramid:weight_b:threads=auto:pass=1",
             "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:b_pyramid:weight_b:threads=auto:pass=2"
+            #" -of lavf -lavfopts format=matroska"
         ],
     },
 }
@@ -203,7 +204,7 @@ List = {
     },
 
     "HDR": {
-        "Device"        : "Generic",
+        "Device"        : "Generic HDR",
         "Comment"       : "HD Ready Video",
         "VideoWidth"    : 1280,
         "VideoHeight"   : 720,
@@ -211,11 +212,12 @@ List = {
         "MaxHeight"     : 0,
         "VideoCodec"    : "x264-hq",
         "AudioCodec"    : "pass",
-        "VideoPostproc" : False
+        "VideoPostproc" : False,
+        "Extension"     : "avi" # "mkv"
     },
 
     "HD": {
-        "Device"        : "Generic",
+        "Device"        : "Generic HD",
         "Comment"       : "HD Video",
         "VideoWidth"    : 1920,
         "VideoHeight"   : 1080,
@@ -223,7 +225,8 @@ List = {
         "MaxHeight"     : 0,
         "VideoCodec"    : "x264-hq",
         "AudioCodec"    : "pass",
-        "VideoPostproc" : False
+        "VideoPostproc" : False,
+        "Extension"     : "avi" # "mkv"
     },
 
     "TX8X0": {

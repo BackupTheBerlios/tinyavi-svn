@@ -239,12 +239,12 @@ msgid ""
 "The directory where to put output files.\n"
 "If left empty, the output file will be created\n"
 "in the same directory where the original is,\n"
-"with the \"_tiny\" suffix appended to its name."
+"with the \"-tiny\" suffix appended to its name."
 msgstr ""
 "Каталог для выходных файлов.\n"
 "Если оставить пустым, выходной файл будет создан\n"
 "в каталоге оригинала, но с прибавленным к имени\n"
-"суффиксом \"_tiny\"."
+"суффиксом \"-tiny\"."
 
 #: share/gui.glade:752 share/gui.glade:955
 msgid "gtk-open"
@@ -271,8 +271,8 @@ msgid "About TinyAVI"
 msgstr "О программе TinyAVI"
 
 #: share/gui.glade:902
-msgid "Copyright (C) 2008 Andrew Zabolotny"
-msgstr "Авторское право (C) 2008 Андрей Заболотный"
+msgid "Copyright (C) 2008,2009 Andrew Zabolotny"
+msgstr "Авторское право (C) 2008,2009 Андрей Заболотный"
 
 #: share/gui.glade:903
 msgid ""
@@ -288,7 +288,7 @@ msgstr "Посетить домашнюю страницу"
 
 #: share/gui.glade:933
 msgid "Select directory for output files"
-msgstr ""
+msgstr "Выберите каталог для выходных файлов"
 
 #: tinyavi/autoconvert.py:24
 #, python-format
@@ -299,7 +299,7 @@ msgstr "Добавляем %(desc)s фильтр: %(filt)s\n"
 msgid "Finding video crop and size ..."
 msgstr "Определяем кадрирование и размер ..."
 
-#: tinyavi/autoconvert.py:137
+#: tinyavi/autoconvert.py:139
 msgid ""
 "\n"
 "UNEXPECTED ERROR: video size too small\n"
@@ -307,30 +307,32 @@ msgstr ""
 "\n"
 "НЕОЖИДАННАЯ ОШИБКА: размер видео слишком мал\n"
 
-#: tinyavi/autoconvert.py:150
+#: tinyavi/autoconvert.py:152
 #, python-format
 msgid "Analysing file %s\n"
 msgstr "Анализируем файл %s\n"
 
-#: tinyavi/autoconvert.py:153
+#: tinyavi/autoconvert.py:155
 #, python-format
 msgid "ERROR: file `%s' does not exist or is not readable\n"
 msgstr "ОШИБКА: файл `%s' не существует или недоступен\n"
 
-#: tinyavi/autoconvert.py:157
+#: tinyavi/autoconvert.py:159
 #, python-format
 msgid "ERROR: Quality value is not allowed (%d)\n"
 msgstr "ОШИБКА: Неверное значение для качества (%d)\n"
 
-#: tinyavi/autoconvert.py:172
+#: tinyavi/autoconvert.py:174
+#, python-format
 msgid "ERROR: unknown target profile `%s'\n"
 msgstr "ОШИБКА: выбран неизвестный профиль  `%s'\n"
 
-#: tinyavi/autoconvert.py:175
+#: tinyavi/autoconvert.py:177
+#, python-format
 msgid "Using target profile `%s'\n"
 msgstr "Используется профиль `%s'\n"
 
-#: tinyavi/autoconvert.py:202
+#: tinyavi/autoconvert.py:204
 #, python-format
 msgid ""
 "Invalid output file mask:\n"
@@ -339,29 +341,29 @@ msgstr ""
 "Ошибочная маска выходного файла:\n"
 "%s"
 
-#: tinyavi/autoconvert.py:206
+#: tinyavi/autoconvert.py:208
 #, python-format
 msgid "Resulting video file: %s\n"
 msgstr "Перекодированный файл: %s\n"
 
-#: tinyavi/autoconvert.py:213
+#: tinyavi/autoconvert.py:215
 msgid "ERROR: failed to determine video/crop width and/or height\n"
 msgstr ""
 "ОШИБКА: не могу определить размер кадра, либо размер его заполненной части\n"
 
-#: tinyavi/autoconvert.py:294 tinyavi/autoconvert.py:296
-#: tinyavi/autoconvert.py:299 tinyavi/autoconvert.py:301
-#: tinyavi/autoconvert.py:303 tinyavi/autoconvert.py:305
-#: tinyavi/autoconvert.py:307 tinyavi/autoconvert.py:316
+#: tinyavi/autoconvert.py:296 tinyavi/autoconvert.py:298
+#: tinyavi/autoconvert.py:301 tinyavi/autoconvert.py:303
+#: tinyavi/autoconvert.py:305 tinyavi/autoconvert.py:307
+#: tinyavi/autoconvert.py:309 tinyavi/autoconvert.py:318
 msgid "video"
 msgstr "видео"
 
-#: tinyavi/autoconvert.py:310 tinyavi/autoconvert.py:312
-#: tinyavi/autoconvert.py:319
+#: tinyavi/autoconvert.py:312 tinyavi/autoconvert.py:314
+#: tinyavi/autoconvert.py:321
 msgid "audio"
 msgstr "аудио"
 
-#: tinyavi/autoconvert.py:376
+#: tinyavi/autoconvert.py:378
 msgid "Analysing finished\n"
 msgstr "Анализ завершён\n"
 
@@ -417,7 +419,7 @@ msgstr "Название видеофайла"
 msgid "Status"
 msgstr "Состояние"
 
-#: tinyavi/gui.py:202
+#: tinyavi/gui.py:207
 #, python-format
 msgid ""
 "Failed to save configuration file:\n"
@@ -445,7 +447,7 @@ msgstr ""
 
 #: tavi:57
 msgid "Display a detailed list of supported targets"
-msgstr ""
+msgstr "Выдать список поддерживаемых профилей преобразования"
 
 #: tavi:59
 msgid "Target video width in pixels"
@@ -513,7 +515,7 @@ msgstr ""
 
 #: tavi:94
 msgid "Here goes the list of supported target profiles:\n"
-msgstr ""
+msgstr "Список поддерживаемых профилей преобразования:\n"
 
 #: tavi:103
 msgid "Nothing to do, exiting; use --help for command-line format\n"

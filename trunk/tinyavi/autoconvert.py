@@ -78,7 +78,7 @@ class AutoConvertAVI:
         res = VideoParam ()
         pr (_("Finding video crop and size ..."))
         sys.stderr.flush ()
-        DEVNULL = open ("/dev/null", "rw")
+        DEVNULL = open (os.devnull, "rw")
 
         for start in (0, 150, 300, 600):
             prevl = ""
@@ -131,7 +131,9 @@ class AutoConvertAVI:
             os.kill (p.pid, signal.SIGTERM)
             p.wait ()
             del p
-            del DEVNULL
+
+        DEVNULL.close ()
+        del DEVNULL
 
         if res.vw < 16 or res.vh < 16:
             pr (_("\nUNEXPECTED ERROR: video size too small\n"))
@@ -165,7 +167,7 @@ class AutoConvertAVI:
         if not preset:
             for x in presets.List:
                 if presets.List [x]["Device"].upper ().find (upper_target) >= 0:
-                    preset = x
+                    preset = presets.List [x]
                     break
 
         if not preset:

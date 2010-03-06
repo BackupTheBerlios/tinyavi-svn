@@ -23,6 +23,8 @@ To install the program, just execute (as root):
 
         make install
 
+A detailed list of changes between versions can be found in debian/changelog.
+
 
 == Advanced mode ==
 
