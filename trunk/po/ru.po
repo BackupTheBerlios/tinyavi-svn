@@ -271,7 +271,8 @@ msgid "About TinyAVI"
 msgstr "О программе TinyAVI"
 
 #: share/gui.glade:902
-msgid "Copyright (C) 2008,2009 Andrew Zabolotny"
+#, fuzzy
+msgid "Copyright (C) 2008-2010 Andrew Zabolotny"
 msgstr "Авторское право (C) 2008,2009 Андрей Заболотный"
 
 #: share/gui.glade:903
@@ -290,16 +291,16 @@ msgstr "Посетить домашнюю страницу"
 msgid "Select directory for output files"
 msgstr "Выберите каталог для выходных файлов"
 
-#: tinyavi/autoconvert.py:24
+#: tinyavi/autoconvert.py:20
 #, python-format
 msgid "Adding %(desc)s filter: %(filt)s\n"
 msgstr "Добавляем %(desc)s фильтр: %(filt)s\n"
 
-#: tinyavi/autoconvert.py:79
+#: tinyavi/autoconvert.py:75
 msgid "Finding video crop and size ..."
 msgstr "Определяем кадрирование и размер ..."
 
-#: tinyavi/autoconvert.py:139
+#: tinyavi/autoconvert.py:135
 msgid ""
 "\n"
 "UNEXPECTED ERROR: video size too small\n"
@@ -307,32 +308,32 @@ msgstr ""
 "\n"
 "НЕОЖИДАННАЯ ОШИБКА: размер видео слишком мал\n"
 
-#: tinyavi/autoconvert.py:152
+#: tinyavi/autoconvert.py:148
 #, python-format
 msgid "Analysing file %s\n"
 msgstr "Анализируем файл %s\n"
 
-#: tinyavi/autoconvert.py:155
+#: tinyavi/autoconvert.py:151
 #, python-format
 msgid "ERROR: file `%s' does not exist or is not readable\n"
 msgstr "ОШИБКА: файл `%s' не существует или недоступен\n"
 
-#: tinyavi/autoconvert.py:159
+#: tinyavi/autoconvert.py:155
 #, python-format
 msgid "ERROR: Quality value is not allowed (%d)\n"
 msgstr "ОШИБКА: Неверное значение для качества (%d)\n"
 
-#: tinyavi/autoconvert.py:174
+#: tinyavi/autoconvert.py:170
 #, python-format
 msgid "ERROR: unknown target profile `%s'\n"
 msgstr "ОШИБКА: выбран неизвестный профиль  `%s'\n"
 
-#: tinyavi/autoconvert.py:177
+#: tinyavi/autoconvert.py:173
 #, python-format
 msgid "Using target profile `%s'\n"
 msgstr "Используется профиль `%s'\n"
 
-#: tinyavi/autoconvert.py:204
+#: tinyavi/autoconvert.py:200
 #, python-format
 msgid ""
 "Invalid output file mask:\n"
@@ -341,29 +342,29 @@ msgstr ""
 "Ошибочная маска выходного файла:\n"
 "%s"
 
-#: tinyavi/autoconvert.py:208
+#: tinyavi/autoconvert.py:204
 #, python-format
 msgid "Resulting video file: %s\n"
 msgstr "Перекодированный файл: %s\n"
 
-#: tinyavi/autoconvert.py:215
+#: tinyavi/autoconvert.py:211
 msgid "ERROR: failed to determine video/crop width and/or height\n"
 msgstr ""
 "ОШИБКА: не могу определить размер кадра, либо размер его заполненной части\n"
 
-#: tinyavi/autoconvert.py:296 tinyavi/autoconvert.py:298
+#: tinyavi/autoconvert.py:292 tinyavi/autoconvert.py:294
+#: tinyavi/autoconvert.py:297 tinyavi/autoconvert.py:299
 #: tinyavi/autoconvert.py:301 tinyavi/autoconvert.py:303
-#: tinyavi/autoconvert.py:305 tinyavi/autoconvert.py:307
-#: tinyavi/autoconvert.py:309 tinyavi/autoconvert.py:318
+#: tinyavi/autoconvert.py:305 tinyavi/autoconvert.py:314
 msgid "video"
 msgstr "видео"
 
-#: tinyavi/autoconvert.py:312 tinyavi/autoconvert.py:314
-#: tinyavi/autoconvert.py:321
+#: tinyavi/autoconvert.py:308 tinyavi/autoconvert.py:310
+#: tinyavi/autoconvert.py:317
 msgid "audio"
 msgstr "аудио"
 
-#: tinyavi/autoconvert.py:378
+#: tinyavi/autoconvert.py:363
 msgid "Analysing finished\n"
 msgstr "Анализ завершён\n"
 

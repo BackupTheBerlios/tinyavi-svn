@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=TinyAVI
 GenericName=The easy video converter for portable devices
+GenericName[be]=Просты відэаканвертар для партатыўных прылад
 GenericName[ru]=Простой видеоконвертер для переносных устройств
 Comment=A program to convert video files to a format suitable for portable devices
+Comment[be]=Праграма для канвертавання відэа файлаў у фармат прыдатны для партатыўных прылад
 Comment[ru]=Программа для преобразования видеофайлов в формат, пригодный для переносных устройств
 Exec=tavi-gui %U
 TryExec=tavi-gui
