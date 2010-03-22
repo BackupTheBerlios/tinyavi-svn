@@ -271,9 +271,8 @@ msgid "About TinyAVI"
 msgstr "О программе TinyAVI"
 
 #: share/gui.glade:902
-#, fuzzy
 msgid "Copyright (C) 2008-2010 Andrew Zabolotny"
-msgstr "Авторское право (C) 2008,2009 Андрей Заболотный"
+msgstr "Авторское право (C) 2008-2010 Андрей Заболотный"
 
 #: share/gui.glade:903
 msgid ""
