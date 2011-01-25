@@ -21,6 +21,17 @@ def AddFilter (val, desc, newf):
     if val != "": val += ","
     return val + newf
 
+def atoi(txt):
+    if not txt:
+        return 0
+    txt = str (txt)
+    for i, c in enumerate (txt):
+        if c not in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
+            if i:
+                return int (txt[:i])
+            else:
+                return 0
+    return int (txt)
 
 # Substitute %(...) macros in 's' with values from dict 'd'
 # If s refers to missing keys in d, replace with empty strings
@@ -96,11 +107,11 @@ class AutoConvertAVI:
                 if re.match (r"^ID_VIDEO_ASPECT=", l):
                     res.aspect = float (re.sub (r".*=([.0-9]+)[^.0-9]*", r"\1", l))
                 elif re.match (r"^ID_VIDEO_WIDTH=", l):
-                    vw = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                    vw = atoi (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
                     if vw >= 16:
                         res.vw = vw;
                 elif re.match (r"^ID_VIDEO_HEIGHT=", l):
-                    vh = int (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
+                    vh = atoi (re.sub (r".*=([0-9]+)[^0-9]*", r"\1", l))
                     if vh >= 16:
                         res.vh = vh;
                 elif re.match (r"^ID_VIDEO_FPS=", l):
@@ -110,18 +121,18 @@ class AutoConvertAVI:
                     xx = re.split (r"\.\.", bb [2])
                     yy = re.split (r"\.\.", bb [4])
 
-                    xx [0] = int (xx [0])
-                    xx [1] = int (xx [1])
-                    yy [0] = int (yy [0])
-                    yy [1] = int (yy [1])
+                    xx [0] = atoi (xx [0])
+                    xx [1] = atoi (xx [1])
+                    yy [0] = atoi (yy [0])
+                    yy [1] = atoi (yy [1])
 
                     res.ExtendCrop (xx[0], yy[0], xx[1] - xx[0] + 1, yy[1] - yy[0] + 1)
                 elif re.match (r"VDec: vo config request -", l):
                     bb = re.split (r"(- *| *x *| *\()", l)
                     if res.vw < 16:
-                        res.vw = int (bb [2]);
+                        res.vw = atoi (bb [2]);
                     if res.vh < 16:
-                        res.vh = int (bb [4]);
+                        res.vh = atoi (bb [4]);
 
             # Kill and close process
             OSW.Kill (p.pid)
