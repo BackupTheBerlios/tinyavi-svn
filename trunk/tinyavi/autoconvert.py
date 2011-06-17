@@ -90,8 +90,9 @@ class AutoConvertAVI:
         for start in (0, 150, 300, 600):
             prevl = ""
             count_equal = 0
-            p = Popen ([OSW.MPLAYER, "-nomsgcolor", "-nouse-filedir-conf", "-identify", \
-                        "-benchmark", "-vo", "null", "-nosound", "-vf", "cropdetect", \
+            p = Popen ([OSW.MPLAYER, "-nomsgcolor", "-noconfig", "all", \
+                        "-nouse-filedir-conf", "-identify", "-benchmark", \
+                        "-vo", "null", "-nosound", "-vf", "cropdetect", \
                         "-frames", "100", "-ss", str (start), fn.encode (FNENC)], \
                         stdin = DEVNULL, stdout = PIPE, stderr = DEVNULL)
             while True:
@@ -327,7 +328,7 @@ class AutoConvertAVI:
             for x in preset ["AudioFilter"]:
                 af = AddFilter (af, _("audio"), x)
 
-        vopt = "-vf-clr"
+        vopt = "-noconfig all -vf-clr"
         aopt = ""
         if options.AudioID != None:
             aopt = aopt + " -aid %d" % options.AudioID
