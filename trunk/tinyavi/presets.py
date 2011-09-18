@@ -44,8 +44,8 @@ vc = {
             2 : lambda w, h, fps: { "bitrate" : (w * h * fps) / 6000 },
         },
         "Options" : [
-            "-of lavf -ovc x264 -x264encopts bitrate=%(bitrate)d:subq=4:bframes=2:b_pyramid:weight_b:threads=auto:pass=1",
-            "-of lavf -ovc x264 -x264encopts bitrate=%(bitrate)d:subq=4:bframes=2:b_pyramid:weight_b:threads=auto:pass=2"
+            "-of lavf -ovc x264 -x264encopts bitrate=%(bitrate)d:subq=4:bframes=2:weight_b:threads=auto:pass=1",
+            "-of lavf -ovc x264 -x264encopts bitrate=%(bitrate)d:subq=4:bframes=2:weight_b:threads=auto:pass=2"
         ],
     },
     # Encode to H.264 by using the high-quality x264 encoder (HD & HDR)
@@ -56,8 +56,8 @@ vc = {
             2 : lambda w, h, fps: { "bitrate" : (w * h * fps) / 6000 },
         },
         "Options" : [
-            "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:b_pyramid:weight_b:threads=auto:pass=1",
-            "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:b_pyramid:weight_b:threads=auto:pass=2"
+            "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:weight_b:threads=auto:pass=1",
+            "-ovc x264 -x264encopts bitrate=%(bitrate)d:subq=5:8x8dct:frameref=2:bframes=3:weight_b:threads=auto:pass=2"
             #" -of lavf -lavfopts format=matroska"
         ],
     },
